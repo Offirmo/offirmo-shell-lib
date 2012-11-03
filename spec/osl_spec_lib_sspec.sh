@@ -1,7 +1,7 @@
 #! /bin/bash
 
 ## Offirmo Shell Library
-## http://
+## https://github.com/Offirmo/offirmo-shell-lib
 ##
 ## This file defines :
 ##   - a set of calls to unit test functions to check them

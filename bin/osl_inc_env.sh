@@ -1,7 +1,7 @@
 #! /bin/bash
 
 ## Offirmo Shell Library
-## http://
+## https://github.com/Offirmo/offirmo-shell-lib
 ##
 ## This file defines :
 ##   - env var needed for other OSL scripts
@@ -10,4 +10,8 @@
 ##    source osl_inc_env.sh
 
 
-## nothing for now ;)
+### Current stamp and version
+OSL_VERSION="0.5.0"
+OSL_STAMP="2012/11/03"
+
+### Default 
