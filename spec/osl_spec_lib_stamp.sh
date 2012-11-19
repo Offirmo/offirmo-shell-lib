@@ -9,9 +9,11 @@
 ## This file is meant to be executed.
 
 source osl_lib_init.sh
-source osl_lib_sspec.sh
 
 source osl_lib_stamp.sh
+
+source osl_lib_sspec.sh
+
 
 OSL_SSPEC_describe "Offirmo Shell Lib stamps"
 
@@ -59,7 +61,7 @@ OSL_SSPEC_file_should_exist "$TEST_STAMP_DIR/$STAMP_TEST_RSRC_ID$OSL_STAMP_MANAG
 OSL_SSPEC_file_should_exist "$TEST_STAMP_DIR/$STAMP_TEST_RSRC_ID$OSL_STAMP_MANAGED_RSRC_MODIF_FINISHED_STAMP_SUFFIX"
 
 ## by default, state must be NOK
-OSL_STAMP_internal_check_rsrc_ok "$TEST_STAMP_DIR" $STAMP_TEST_RSRC_ID
+OSL_STAMP_check_rsrc_ok "$TEST_STAMP_DIR" $STAMP_TEST_RSRC_ID
 OSL_SSPEC_return_code_should_be_NOK $?
 
 
@@ -69,7 +71,7 @@ OSL_SSPEC_return_code_should_be_OK $?
 OSL_STAMP_end_managed_write_operation "$TEST_STAMP_DIR" $STAMP_TEST_RSRC_ID
 OSL_SSPEC_return_code_should_be_OK $?
 ## state must be OK
-OSL_STAMP_internal_check_rsrc_ok "$TEST_STAMP_DIR" $STAMP_TEST_RSRC_ID
+OSL_STAMP_check_rsrc_ok "$TEST_STAMP_DIR" $STAMP_TEST_RSRC_ID
 OSL_SSPEC_return_code_should_be_OK $?
 
 
@@ -79,7 +81,7 @@ OSL_SSPEC_return_code_should_be_OK $?
 OSL_STAMP_end_managed_read_operation "$TEST_STAMP_DIR" $STAMP_TEST_RSRC_ID
 OSL_SSPEC_return_code_should_be_OK $?
 ## state must still be OK
-OSL_STAMP_internal_check_rsrc_ok "$TEST_STAMP_DIR" $STAMP_TEST_RSRC_ID
+OSL_STAMP_check_rsrc_ok "$TEST_STAMP_DIR" $STAMP_TEST_RSRC_ID
 OSL_SSPEC_return_code_should_be_OK $?
 
 

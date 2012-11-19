@@ -1,7 +1,7 @@
 #! /bin/bash
 
 ## Offirmo Shell Library
-## http://
+## https://github.com/Offirmo/offirmo-shell-lib
 ##
 ## This file defines :
 ##   - method for shell mutexes
@@ -23,7 +23,7 @@ OSL_MUTEX_LOCKFILE_LOCKTIMEOUT=900 # 1/4 hour
 
 OSL_MUTEX_internal_init_vars()
 {
-	echo "[initializing mutexes...]"
+	#echo "[initializing mutexes...]"
 
 	OSL_MUTEX_unreleased_mutexes=""
 }

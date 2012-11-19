@@ -1,7 +1,7 @@
 #! /bin/bash
 
 ## Offirmo Shell Library
-## http://
+## https://github.com/Offirmo/offirmo-shell-lib
 ##
 ## This file defines :
 ##   debug functions : traces, 
@@ -37,7 +37,7 @@ OSL_debug_multi()
 
 	echo -en $OSL_OUTPUT_STYLE_DEBUG
 	for line in $buffer; do
-		debug $line
+		OSL_debug $line
 	done
 	echo -en $OSL_ANSI_CODE_RESET
 

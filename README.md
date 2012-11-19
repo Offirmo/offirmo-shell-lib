@@ -36,22 +36,22 @@ ANSI (color) codes
 
 First there is a very useful feature : ANSI color codes definitions. Having an error message displayed in bright RED and a success message in green is so helpful !
 
- `echo -en $OSL_ANSI_CODE_SET_FG_GREEN$OSL_ANSI_CODE_SET_BRIGHT
- echo -n "Success !"
- echo -e $OSL_ANSI_CODE_RESET`
+ `echo -en $OSL_ANSI_CODE_SET_FG_GREEN$OSL_ANSI_CODE_SET_BRIGHT`
+ `echo -n "Success !"`
+ `echo -e $OSL_ANSI_CODE_RESET`
 
 Styled display (echo) functions
 -------------------------------
 
 Various echo wrappers functions :
 
- OSL_OUTPUT_notify <message>
- OSL_OUTPUT_warn <message>           <-- in orange
- OSL_OUTPUT_display_error_message <message>   <-- in red of course
- OSL_OUTPUT_warn_not_implemented
+ `OSL_OUTPUT_notify <message>`
+ `OSL_OUTPUT_warn <message>`           <-- in orange
+ `OSL_OUTPUT_display_error_message <message>`   <-- in red of course
+ `OSL_OUTPUT_warn_not_implemented`
  
- OSL_debug <message>      <-- output in light gray prefixed with [debug]
- OSL_debug_multi <multi-line message>    <-- output in light gray prefixed with [debug]
+ `OSL_debug <message>`      <-- output in light gray prefixed with [debug]
+ `OSL_debug_multi <multi-line message>`    <-- output in light gray prefixed with [debug]
 
 Flow control
 ------------

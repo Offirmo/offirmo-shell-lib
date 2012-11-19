@@ -9,9 +9,11 @@
 ## This file is meant to be executed.
 
 source osl_lib_init.sh
-source osl_lib_sspec.sh
 
 source osl_inc_ansi_codes.sh
+
+source osl_lib_sspec.sh
+
 
 OSL_SSPEC_describe "Offirmo Shell Lib color codes"
 

@@ -1,7 +1,7 @@
 #! /bin/bash
 
 ## Offirmo Shell Library
-## http://
+## https://github.com/Offirmo/offirmo-shell-lib
 ##
 ## This file defines :
 ##   - method for creating and checking stamp files
@@ -11,7 +11,7 @@
 
 ## osl_lib_init is supposed to be already sourced
 source osl_lib_output.sh
-
+source osl_lib_debug.sh
 
 
 ####### basic stamp functions #######
@@ -107,7 +107,7 @@ OSL_STAMP_internal_init_managed_rsrc_stamps()
 
 ## Check if the rsrc is ready,
 ## i.e. properly initialized and not currently being modified
-OSL_STAMP_internal_check_rsrc_ok()
+OSL_STAMP_check_rsrc_ok()
 {
 	local return_code=1 # !0 = modif in progress by default
 	## just in case
@@ -122,15 +122,15 @@ OSL_STAMP_internal_check_rsrc_ok()
 	local last_modification_date=$(OSL_STAMP_stamp_date "$last_modif_stamp_file")
 	local end_of_modification_date=$(OSL_STAMP_stamp_date "$modif_finished_stamp_file")
 
-	echo -n "[comparing stamp dates : $last_modification_date, $end_of_modification_date]"
+	OSL_debug "[OSL_STAMP] comparing stamp dates for rsrc \"$rsrc_id\" : $last_modification_date == $end_of_modification_date ?"
 	
 	if [[ "$last_modification_date" == "$end_of_modification_date" ]]; then
 		## it seems that no operation is in progress
 		## at the time of this test
-		echo "[equality]"
+		OSL_debug "[OSL_STAMP] -> comparison OK (equality) seems no op in progress."
 		return_code=0
 	else
-		echo "[inequality]"
+		OSL_debug "[OSL_STAMP] -> comparison NOK (inequality) seems unfinished op."
 	fi
 
 	return $return_code
@@ -176,7 +176,7 @@ OSL_STAMP_begin_managed_write_operation()
 	## and store the date
 	OSL_STAMP_last_managed_operation_modif_date=$(OSL_STAMP_stamp_date "$last_modif_stamp_file")
 	
-	echo "[beginning managed write of rsrc \"$rsrc_id\" on $OSL_STAMP_last_managed_operation_modif_date]"
+	OSL_debug "[OSL_STAMP] beginning managed write of rsrc \"$rsrc_id\" on $OSL_STAMP_last_managed_operation_modif_date..."
 
 	return 0
 }
@@ -207,14 +207,14 @@ OSL_STAMP_end_managed_write_operation()
 		## doesn't always gives the same date
 		touch --reference "$last_modif_stamp_file" "$modif_finished_stamp_file"
 		return_code=0 ## OK
-		echo "[ending managed write of rsrc \"$rsrc_id\" on $(OSL_STAMP_stamp_date "$last_modif_stamp_file")/$(OSL_STAMP_stamp_date "$modif_finished_stamp_file")]"
+		OSL_debug "[OSL_STAMP] ending managed write of rsrc \"$rsrc_id\" on $(OSL_STAMP_stamp_date "$last_modif_stamp_file")/$(OSL_STAMP_stamp_date "$modif_finished_stamp_file")"
 	else
 		## state changed by someone else while we where writing !
 		## touch the last modif stamp again so concurrent writer will notice the problem
 		touch "$last_modif_stamp_file"
 		## do nothing more
 		## return code stays NOK
-		echo "[Warning : concurrent write detected for rsrc \"$rsrc_id\" !]"
+		OSL_debug "[OSL_STAMP] Warning : concurrent write detected for rsrc \"$rsrc_id\" !"
 	fi
 	
 	return $return_code
@@ -234,7 +234,7 @@ OSL_STAMP_begin_managed_read_operation()
 	local last_modif_stamp_file=$stamp_dir/$rsrc_id$OSL_STAMP_MANAGED_RSRC_LAST_MODIF_STAMP_SUFFIX
 	local modif_finished_stamp_file=$stamp_dir/$rsrc_id$OSL_STAMP_MANAGED_RSRC_MODIF_FINISHED_STAMP_SUFFIX
 
-	OSL_STAMP_internal_check_rsrc_ok "$1" "$2"
+	OSL_STAMP_check_rsrc_ok "$1" "$2"
 	local rsrc_dirty=$?
 	
 	if [[ $rsrc_dirty -eq 0 ]]; then
@@ -242,9 +242,9 @@ OSL_STAMP_begin_managed_read_operation()
 		## but no stamp modification (read only)
 		OSL_STAMP_last_managed_operation_modif_date=$(OSL_STAMP_stamp_date "$last_modif_stamp_file")
 		return_code=0
-		echo "[begin managed read of rsrc \"$rsrc_id\" on $OSL_STAMP_last_managed_operation_begin_date]"
+		OSL_debug "[OSL_STAMP] begin managed read of rsrc \"$rsrc_id\" on $OSL_STAMP_last_managed_operation_begin_date..."
 	else
-		echo "[aborting read of rsrc \"$rsrc_id\" because rsrc is not ready !]"
+		OSL_debug "[OSL_STAMP] aborting read of rsrc \"$rsrc_id\" because rsrc is not ready !"
 	fi
 		
 	return $return_code
@@ -267,21 +267,19 @@ OSL_STAMP_end_managed_read_operation()
 	local expected_last_modif_date=$OSL_STAMP_last_managed_operation_modif_date
 	local actual_last_modif_date=$(OSL_STAMP_stamp_date "$last_modif_stamp_file")
 
-	echo -n "[ER comparing stamp dates : $expected_last_modif_date, $actual_last_modif_date]"
+	OSL_debug "[OSL_STAMP] End of read : comparing stamp dates for rsrc \"$rsrc_id\" : $expected_last_modif_date, $actual_last_modif_date..."
 
 	if [[ "$actual_last_modif_date" == "$expected_last_modif_date" ]]; then
-		echo "[equality]"
 		## fine, no one touched the last modif stamp.
 		## we leave everything untouched
 		return_code=0 # OK
-		echo "[ending managed read of rsrc \"$rsrc_id\"]"
+		OSL_debug "[OSL_STAMP] -> Comparison OK (equality), ending managed read of rsrc \"$rsrc_id\"."
 	else
-		echo "[inequality]"
 		## state changed by someone else while we where reading !
 		## do nothing
 		do_nothing=1
 		## return code stays NOK
-		echo "[Warning : modification detected while reading rsrc \"$operation_code\" !]"
+		OSL_debug "[OSL_STAMP] -> Comparison NOK (inequality), Warning : modification detected while reading rsrc \"$rsrc_id\" !"
 	fi
 		
 	return $return_code

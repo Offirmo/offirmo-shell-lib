@@ -1,7 +1,7 @@
 #! /bin/bash
 
 ## Offirmo Shell Library
-## http://
+## https://github.com/Offirmo/offirmo-shell-lib
 ##
 ## This file defines :
 ##   methods for unit testing shell scripts.
@@ -158,3 +158,12 @@ OSL_SSPEC_file_should_exist()
 	fi
 }
 
+# Mark the need for a test not implemented yet
+OSL_SSPEC_should_spec()
+{
+	local msg=$*
+	
+	echo -en $OSL_OUTPUT_STYLE_WARNING
+	echo "TODO test : $msg"
+	echo -en $OSL_OUTPUT_STYLE_DEFAULT
+}

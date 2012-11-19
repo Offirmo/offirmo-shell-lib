@@ -1,7 +1,7 @@
 #! /bin/bash
 
 ## Offirmo Shell Library
-## http://
+## https://github.com/Offirmo/offirmo-shell-lib
 ##
 ## This file is meant to be sourced :
 ##    source osl_lib_output.sh
@@ -73,6 +73,16 @@ OSL_OUTPUT_display_error_message()
 	echo ""
 	echo -en $OSL_OUTPUT_STYLE_ERROR
 	echo "XXX $*"
+	echo -en $OSL_OUTPUT_STYLE_DEFAULT
+}
+
+# display a success message in a clearly visible way
+# params : all params will be displayed
+OSL_OUTPUT_display_success_message()
+{
+	echo ""
+	echo -en $OSL_OUTPUT_STYLE_SUCCESS
+	echo "$*"
 	echo -en $OSL_OUTPUT_STYLE_DEFAULT
 }
 

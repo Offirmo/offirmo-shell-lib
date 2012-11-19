@@ -1,7 +1,7 @@
 #! /bin/bash
 
 ## Offirmo Shell Library
-## http://
+## https://github.com/Offirmo/offirmo-shell-lib
 ##
 ## This file defines :
 ##   - critical utilities / setup that must be set at the very start.
@@ -84,6 +84,10 @@ fi
 if [[ -z "$OSL_INIT_ORIGINAL_IFS" ]]; then
 	OSL_INIT_ORIGINAL_IFS=$IFS
 fi
+OSL_INIT_restore_default_IFS()
+{
+	IFS=$OSL_INIT_ORIGINAL_IFS
+}
 
 OSL_INIT_DEFAULT_LOG_DIR=~/logs
 mkdir -p $OSL_INIT_DEFAULT_LOG_DIR
