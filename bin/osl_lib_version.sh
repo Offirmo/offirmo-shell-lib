@@ -46,7 +46,8 @@ OSL_VERSION_test_greater_or_equal()
 	local tested_version=$1
 	local reference_version=$2
 	local return_value=1 ## false until found otherwise
-	
+
+	#echo "testing that $tested_version >= $reference_version..."
 	local comp_result=$(OSL_VERSION_compare $tested_version $reference_version)
 	#echo "comparison result : $comp_result"
 	if [[ $comp_result -ge 0 ]]; then
@@ -67,6 +68,23 @@ OSL_VERSION_test_smaller_or_equal()
 	local comp_result=$(OSL_VERSION_compare $tested_version $reference_version)
 	#echo "comparison result : $comp_result"
 	if [[ $comp_result -le 0 ]]; then
+		## fine, it is
+		#echo "le OK"
+		return_value=0
+	fi
+	
+	return $return_value
+}
+
+OSL_VERSION_test_strictly_smaller()
+{
+	local tested_version=$1
+	local reference_version=$2
+	local return_value=1 ## false until found otherwise
+	
+	local comp_result=$(OSL_VERSION_compare $tested_version $reference_version)
+	#echo "comparison result : $comp_result"
+	if [[ $comp_result -lt 0 ]]; then
 		## fine, it is
 		#echo "le OK"
 		return_value=0

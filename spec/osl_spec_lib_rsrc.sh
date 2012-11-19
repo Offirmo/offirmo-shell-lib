@@ -15,17 +15,105 @@ source osl_lib_rsrc.sh
 source osl_lib_sspec.sh
 
 
-OSL_SSPEC_describe "Offirmo Shell Lib safe rsrc manip"
+OSL_SSPEC_describe "Offirmo Shell Lib safe rsrc manipulation"
 
 ## base
 
 TEST_RSRC_DIR=$HOME
+TEST_RSRC_ID="test_rsrc"
 
-OSL_SSPEC_should_spec normal use
+## initial cleanup just in case
+OSL_RSRC_cleanup "$TEST_RSRC_DIR" $TEST_RSRC_ID
 
-OSL_SSPEC_should_spec normal OSL_RSRC_end_managed_write_operation_error
+
+echo "* testing read of nonexistent rsrc"
+OSL_RSRC_check "$TEST_RSRC_DIR" $TEST_RSRC_ID
+OSL_SSPEC_return_code_should_be_NOK $?
+
+
+echo "* testing nominal write case"
+OSL_RSRC_begin_managed_write_operation "$TEST_RSRC_DIR" $TEST_RSRC_ID
+OSL_SSPEC_return_code_should_be_OK $?
+OSL_RSRC_end_managed_write_operation "$TEST_RSRC_DIR" $TEST_RSRC_ID
+OSL_SSPEC_return_code_should_be_OK $?
+## state must be OK
+OSL_RSRC_check "$TEST_RSRC_DIR" $TEST_RSRC_ID
+OSL_SSPEC_return_code_should_be_OK $?
+
+
+echo "* testing nominal read case"
+OSL_RSRC_begin_managed_read_operation "$TEST_RSRC_DIR" $TEST_RSRC_ID
+OSL_SSPEC_return_code_should_be_OK $?
+OSL_RSRC_end_managed_read_operation "$TEST_RSRC_DIR" $TEST_RSRC_ID
+OSL_SSPEC_return_code_should_be_OK $?
+## state must still be OK
+OSL_RSRC_check "$TEST_RSRC_DIR" $TEST_RSRC_ID
+OSL_SSPEC_return_code_should_be_OK $?
+
+
+echo "* testing conflict case 1 : concurrent writes"
+OSL_RSRC_begin_managed_write_operation "$TEST_RSRC_DIR" $TEST_RSRC_ID
+OSL_SSPEC_return_code_should_be_OK $?
+OSL_RSRC_last_managed_operation_modif_date_SAVE_1=$OSL_STAMP_last_managed_operation_modif_date
+# concurrent modif, cannot detect concurrency at this stage
+OSL_RSRC_begin_managed_write_operation "$TEST_RSRC_DIR" $TEST_RSRC_ID
+OSL_SSPEC_return_code_should_be_OK $?
+OSL_RSRC_last_managed_operation_modif_date_SAVE_2=$OSL_STAMP_last_managed_operation_modif_date
+
+# restore first call value
+OSL_STAMP_last_managed_operation_modif_date=$OSL_RSRC_last_managed_operation_modif_date_SAVE_1
+# should fail
+OSL_RSRC_end_managed_write_operation "$TEST_RSRC_DIR" $TEST_RSRC_ID
+OSL_SSPEC_return_code_should_be_NOK $?
+# restore second call value
+OSL_STAMP_last_managed_operation_modif_date=$OSL_RSRC_last_managed_operation_modif_date_SAVE_2
+# should also fail
+OSL_RSRC_end_managed_write_operation "$TEST_RSRC_DIR" $TEST_RSRC_ID
+OSL_SSPEC_return_code_should_be_NOK $?
+
+
+echo "* testing conflict case 2 : read while writing"
+OSL_RSRC_begin_managed_write_operation "$TEST_RSRC_DIR" $TEST_RSRC_ID
+OSL_SSPEC_return_code_should_be_OK $?
+OSL_RSRC_last_managed_operation_modif_date_SAVE_1=$OSL_STAMP_last_managed_operation_modif_date
+## read while there is a write
+## conflict should be detected
+OSL_RSRC_begin_managed_read_operation "$TEST_RSRC_DIR" $TEST_RSRC_ID
+OSL_SSPEC_return_code_should_be_NOK $?
+## end write
+OSL_RSRC_end_managed_write_operation "$TEST_RSRC_DIR" $TEST_RSRC_ID
+OSL_SSPEC_return_code_should_be_OK $?
+
+
+echo "* testing conflict case 3 : write while we are reading"
+OSL_RSRC_begin_managed_read_operation "$TEST_RSRC_DIR" $TEST_RSRC_ID
+OSL_SSPEC_return_code_should_be_OK $?
+OSL_RSRC_last_managed_operation_modif_date_SAVE_1=$OSL_STAMP_last_managed_operation_modif_date
+# modif while we are reading
+OSL_RSRC_begin_managed_write_operation "$TEST_RSRC_DIR" $TEST_RSRC_ID
+OSL_SSPEC_return_code_should_be_OK $?
+OSL_RSRC_last_managed_operation_modif_date_SAVE_2=$OSL_STAMP_last_managed_operation_modif_date
+# another read : must fail at once
+OSL_RSRC_begin_managed_read_operation "$TEST_RSRC_DIR" $TEST_RSRC_ID
+OSL_SSPEC_return_code_should_be_NOK $?
+
+# restore first call value
+OSL_STAMP_last_managed_operation_modif_date=$OSL_RSRC_last_managed_operation_modif_date_SAVE_1
+# should fail
+OSL_RSRC_end_managed_read_operation "$TEST_RSRC_DIR" $TEST_RSRC_ID
+OSL_SSPEC_return_code_should_be_NOK $?
+# restore second call value
+OSL_STAMP_last_managed_operation_modif_date=$OSL_RSRC_last_managed_operation_modif_date_SAVE_2
+# this one should suceed
+OSL_RSRC_end_managed_write_operation "$TEST_RSRC_DIR" $TEST_RSRC_ID
+OSL_SSPEC_return_code_should_be_OK $?
+
+
+OSL_SSPEC_should_spec OSL_RSRC_end_managed_write_operation_with_error
 
 
 ## clean remains
+OSL_RSRC_cleanup "$TEST_RSRC_DIR" $TEST_RSRC_ID
+
 
 OSL_SSPEC_end

@@ -14,17 +14,17 @@
 ## a critical util
 OSL_INIT_ensure_dir()
 {
-	if [[ ! -d $1 ]]; then
+	if [[ ! -d "$1" ]]; then
 #		echo "creating $1..."
-		mkdir -p $1 # -p = create parent dirs if needed
+		mkdir -p "$1" # -p = create parent dirs if needed
 	fi
 
-	if [[ ! -d $1 ]]; then
+	if [[ ! -d "$1" ]]; then
 		# creation failed...
-		return 0
+		return 1
 	else
 		# OK
-		return 1
+		return 0
 	fi
 }
 

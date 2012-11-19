@@ -70,6 +70,7 @@ OSL_OUTPUT_warn()
 # params : all params will be displayed
 OSL_OUTPUT_display_error_message()
 {
+	## send to stderr ?
 	echo ""
 	echo -en $OSL_OUTPUT_STYLE_ERROR
 	echo "XXX $*"
@@ -86,18 +87,6 @@ OSL_OUTPUT_display_success_message()
 	echo -en $OSL_OUTPUT_STYLE_DEFAULT
 }
 
-# display an error message in a clearly visible way
-# AND stop execution
-# params : all params will be displayed
-OSL_OUTPUT_abort_execution_with_message()
-{
-	OSL_OUTPUT_display_error_message $*
-	echo -en $OSL_OUTPUT_STYLE_ERROR
-	echo "Execution aborted."
-	echo -en $OSL_OUTPUT_STYLE_DEFAULT
-	echo ""
-	exit 1
-}
 
 # display a "not implemented" warning message
 # but doesn't stop execution
@@ -105,13 +94,4 @@ OSL_OUTPUT_abort_execution_with_message()
 OSL_OUTPUT_warn_not_implemented()
 {
 	OSL_OUTPUT_warn "$* : Sorry, went through a part not yet implemented."
-}
-
-
-# display a "not implemented" error message
-# and stop execution
-# params : all params will be displayed
-OSL_OUTPUT_abort_execution_because_not_implemented()
-{
-	OSL_OUTPUT_abort_execution_with_message "$* : Sorry, this feature is not implemented yet."
 }

@@ -273,13 +273,13 @@ OSL_STAMP_end_managed_read_operation()
 		## fine, no one touched the last modif stamp.
 		## we leave everything untouched
 		return_code=0 # OK
-		OSL_debug "[OSL_STAMP] -> Comparison OK (equality), ending managed read of rsrc \"$rsrc_id\"."
+		OSL_debug "[OSL_STAMP] -> Comparison OK (equality), no concurrent chage, ending managed read of rsrc \"$rsrc_id\"."
 	else
 		## state changed by someone else while we where reading !
 		## do nothing
 		do_nothing=1
 		## return code stays NOK
-		OSL_debug "[OSL_STAMP] -> Comparison NOK (inequality), Warning : modification detected while reading rsrc \"$rsrc_id\" !"
+		OSL_debug "[OSL_STAMP] -> Comparison NOK (inequality), Warning : concurrent chage detected while reading rsrc \"$rsrc_id\" !"
 	fi
 		
 	return $return_code

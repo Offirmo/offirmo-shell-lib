@@ -15,7 +15,7 @@ echo ""
 
 echo "~~~ Hello from Offirmo Shell Lib ~~~"
 echo "* current version : $OSL_VERSION ($OSL_STAMP)"
-echo "..."
+echo "* install path    : $OSL_INIT_script_full_dir"
 
 echo ""
 
