@@ -35,7 +35,7 @@ OSL_STAMP_ensure_stamp()
 			touch -t 197101010000 "$stamp_file"
 		else
 			# create it with the current date
-			touch "$stamp_file"
+			OSL_STAMP_touch_stamps "$stamp_file"
 		fi
 	fi
 
@@ -82,8 +82,8 @@ OSL_STAMP_stamp_date()
 
 
 
-OSL_STAMP_MANAGED_RSRC_LAST_MODIF_STAMP_SUFFIX=".last_modif.stamp"
-OSL_STAMP_MANAGED_RSRC_MODIF_FINISHED_STAMP_SUFFIX=".done.stamp"
+OSL_STAMP_MANAGED_RSRC_LAST_MODIF_STAMP_SUFFIX=".last_mod.stamp"
+OSL_STAMP_MANAGED_RSRC_MODIF_FINISHED_STAMP_SUFFIX=".last_eoo.stamp"
 
 
 ## init the stamp pair for a given rsrc
@@ -95,13 +95,40 @@ OSL_STAMP_internal_init_managed_rsrc_stamps()
 	local last_modif_stamp_file=$stamp_dir/$rsrc_id$OSL_STAMP_MANAGED_RSRC_LAST_MODIF_STAMP_SUFFIX
 	local modif_finished_stamp_file=$stamp_dir/$rsrc_id$OSL_STAMP_MANAGED_RSRC_MODIF_FINISHED_STAMP_SUFFIX
 
+	#OSL_debug "[OSL_STAMP] creating \"$stamp_dir/$rsrc_id\" stamps..."
+	
 	## if stamps don't exist, they will be created
 	## use old mode to ensure different dates, which is ok because
 	## it means that rsrc is not ready (not initialized)
-	OSL_STAMP_ensure_stamp "$last_modif_stamp_file" in_old_mode
+	OSL_STAMP_ensure_stamp "$last_modif_stamp_file" to_oldest_possible_date
 	OSL_STAMP_ensure_stamp "$modif_finished_stamp_file"
 	
 	return 0
+}
+
+
+## A func to touch a stamp.
+## To be reliable, we must hack a little bit
+OSL_STAMP_touch_stamps()
+{
+	local stamp_1=$1
+	local stamp_2=$2
+
+	touch "$stamp_1"
+	## problem : it seems that
+	##   touch foo
+	## and
+	##   touch --reference "foo" "bar"
+	## have different resolutions on a RAM fs (seen by experience)
+	## so we use --reference on oneself for the first stamp to give him the same rounding
+	touch --reference "$stamp_1" "$stamp_1"
+	
+	## we can now safely proceed with the second stamp (if any)
+	if [[ -n "$stamp_2" ]]; then
+		touch --reference "$stamp_1" "$stamp_2"
+	fi
+	
+	return $?
 }
 
 
@@ -171,7 +198,7 @@ OSL_STAMP_begin_managed_write_operation()
 	## So there is no use to check stamp state.
 	
 	## force stamp modification
-	touch "$last_modif_stamp_file"
+	OSL_STAMP_touch_stamps "$last_modif_stamp_file"
 
 	## and store the date
 	OSL_STAMP_last_managed_operation_modif_date=$(OSL_STAMP_stamp_date "$last_modif_stamp_file")
@@ -202,16 +229,13 @@ OSL_STAMP_end_managed_write_operation()
 		## fine, no one touched the last modif stamp.
 		## so WE touch it to show that current state is no longer what it was at the beginning
 		## and also touch "done" stamp to record completion date
-		touch "$last_modif_stamp_file"
-		## use two calls because experience show that touch with 2 args
-		## doesn't always gives the same date
-		touch --reference "$last_modif_stamp_file" "$modif_finished_stamp_file"
-		return_code=0 ## OK
-		OSL_debug "[OSL_STAMP] ending managed write of rsrc \"$rsrc_id\" on $(OSL_STAMP_stamp_date "$last_modif_stamp_file")/$(OSL_STAMP_stamp_date "$modif_finished_stamp_file")"
+		OSL_STAMP_touch_stamps "$last_modif_stamp_file" "$modif_finished_stamp_file"
+		return_code=$?
+		OSL_debug "[OSL_STAMP] ending managed write of rsrc \"$rsrc_id\" on $(OSL_STAMP_stamp_date "$last_modif_stamp_file")/$(OSL_STAMP_stamp_date "$modif_finished_stamp_file") properly."
 	else
 		## state changed by someone else while we where writing !
 		## touch the last modif stamp again so concurrent writer will notice the problem
-		touch "$last_modif_stamp_file"
+		OSL_STAMP_touch_stamps "$last_modif_stamp_file"
 		## do nothing more
 		## return code stays NOK
 		OSL_debug "[OSL_STAMP] Warning : concurrent write detected for rsrc \"$rsrc_id\" !"
