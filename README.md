@@ -25,7 +25,7 @@ The OSL is targeted at bash, though since I used to be forced to use ksh, it sho
 Installation
 ------------
 Get a copy of the files and set your path to point to the OSL "bin" dir.
-You can chek if it works by typing :
+You can check if it works by typing :
 
  `osl_help.sh`
  

@@ -14,14 +14,17 @@ source osl_inc_env.sh
 source osl_lib_output.sh
 
 
+if [[ -z "$OSL_debug" ]]; then
+	OSL_debug=false
+fi
 
 # a quick and easy debug func
 # use a special style
 OSL_debug()
 {
-	echo -en $OSL_OUTPUT_STYLE_DEBUG
-	echo "[Debug] $*"
-	echo -en $OSL_ANSI_CODE_RESET
+	$OSL_debug && echo -en $OSL_OUTPUT_STYLE_DEBUG
+	$OSL_debug && echo "[Debug] $*"
+	$OSL_debug && echo -en $OSL_ANSI_CODE_RESET
 }
 
 # same for a multi-lines buffer

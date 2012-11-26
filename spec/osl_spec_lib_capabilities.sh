@@ -51,6 +51,15 @@ echo "OSL_CAPABILITIES_has_apt()         -> $(OSL_CAPABILITIES_has_apt)"
 # OSL_CAPABILITIES_is_debian_based() -> false
 # OSL_CAPABILITIES_has_apt()         -> false
 
-
+## tested on an Ubuntu :
+# OSL_CAPABILITIES_OS          = Linux
+# OSL_CAPABILITIES_REV         = 10.04
+# OSL_CAPABILITIES_ARCH        = unknown
+# OSL_CAPABILITIES_DIST        = Ubuntu
+# OSL_CAPABILITIES_PSEUDONAME  = lucid
+# OSL_CAPABILITIES_INFO_FILE   = /etc/lsb-release
+# OSL_CAPABILITIES_OSSTR       = Linux Ubuntu 10.04 (lucid 2.6.32-33-server x86_64)
+# OSL_CAPABILITIES_is_debian_based() -> true
+# OSL_CAPABILITIES_has_apt()         -> true
 
 OSL_SSPEC_end
