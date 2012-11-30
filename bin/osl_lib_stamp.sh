@@ -239,6 +239,7 @@ OSL_STAMP_end_managed_write_operation()
 		## do nothing more
 		## return code stays NOK
 		OSL_debug "[OSL_STAMP] Warning : concurrent write detected for rsrc \"$rsrc_id\" !"
+		OSL_debug "[OSL_STAMP] expected last modif $expected_last_modif_date, actual : $actual_last_modif_date"
 	fi
 	
 	return $return_code

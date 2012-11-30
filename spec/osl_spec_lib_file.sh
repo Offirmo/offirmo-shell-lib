@@ -24,12 +24,13 @@ TEST_LINE2="titi toto" ## must be a subset of former to check correct grep
 ## init
 rm -f "$TEST_FILE"
 
-echo "test on nonexistent file (error msg expected)"
+echo -e "add line to file : test on nonexistent file $OSL_OUTPUT_STYLE_ERROR(error msg expected)$OSL_OUTPUT_STYLE_DEFAULT"
 OSL_FILE_ensure_line_is_present_in_file "$TEST_LINE1" "$TEST_FILE"
 OSL_SSPEC_return_code_should_be_NOK $?
 
 touch "$TEST_FILE"
 
+echo "add line to file : test on existing file"
 echo "test 1 : initial add"
 OSL_FILE_ensure_line_is_present_in_file "$TEST_LINE1" "$TEST_FILE"
 OSL_SSPEC_return_code_should_be_OK $?
@@ -57,8 +58,59 @@ OSL_SSPEC_return_code_should_be_OK $?
 OSL_SSPEC_string_should_eq "`cat "$TEST_FILE"`" "$TEST_LINE1
 $TEST_LINE2"
 
-
 ## cleanup
 rm -f "$TEST_FILE"
+
+
+echo "test OSL_FILE_find_common_path"
+OSL_FILE_find_common_path "A/B/C" "A"
+OSL_SSPEC_string_should_eq "$return_value" "A"
+OSL_FILE_find_common_path "/A/B/C" "/A"
+OSL_SSPEC_string_should_eq "$return_value" "/A"
+OSL_FILE_find_common_path "/A/B/C" "/A/B"
+OSL_SSPEC_string_should_eq "$return_value" "/A/B"
+OSL_FILE_find_common_path "/A/B/C" "/A/B/C"
+OSL_SSPEC_string_should_eq "$return_value" "/A/B/C"
+OSL_FILE_find_common_path "/A/B/C" "/A/B/C/D"
+OSL_SSPEC_string_should_eq "$return_value" "/A/B/C"
+OSL_FILE_find_common_path "/A/B/C" "/A/B/C/D/E"
+OSL_SSPEC_string_should_eq "$return_value" "/A/B/C"
+OSL_FILE_find_common_path "/A/B/C" "/A/B/D"
+OSL_SSPEC_string_should_eq "$return_value" "/A/B"
+OSL_FILE_find_common_path "/A/B/C" "/A/B/D/E"
+OSL_SSPEC_string_should_eq "$return_value" "/A/B"
+OSL_FILE_find_common_path "/A/B/C" "/A/D"
+OSL_SSPEC_string_should_eq "$return_value" "/A"
+OSL_FILE_find_common_path "/A/B/C" "/A/D/E"
+OSL_SSPEC_string_should_eq "$return_value" "/A"
+OSL_FILE_find_common_path "/A/B/C" "/D/E/F"
+OSL_SSPEC_string_should_eq "$return_value" "/"
+
+echo "test OSL_FILE_find_relative_path"
+OSL_FILE_find_relative_path "A/B/C" "A"
+OSL_SSPEC_string_should_eq "$return_value" "../.."
+OSL_FILE_find_relative_path "./A/B/C" "./A"
+OSL_SSPEC_string_should_eq "$return_value" "../.."
+OSL_FILE_find_relative_path "/A/B/C" "/A"
+OSL_SSPEC_string_should_eq "$return_value" "../.."
+OSL_FILE_find_relative_path "/A/B/C" "/A/B"
+OSL_SSPEC_string_should_eq "$return_value" ".."
+OSL_FILE_find_relative_path "/A/B/C" "/A/B/C"
+OSL_SSPEC_string_should_eq "$return_value" ""
+OSL_FILE_find_relative_path "/A/B/C" "/A/B/C/D"
+OSL_SSPEC_string_should_eq "$return_value" "D"
+OSL_FILE_find_relative_path "/A/B/C" "/A/B/C/D/E"
+OSL_SSPEC_string_should_eq "$return_value" "D/E"
+OSL_FILE_find_relative_path "/A/B/C" "/A/B/D"
+OSL_SSPEC_string_should_eq "$return_value" "../D"
+OSL_FILE_find_relative_path "/A/B/C" "/A/B/D/E"
+OSL_SSPEC_string_should_eq "$return_value" "../D/E"
+OSL_FILE_find_relative_path "/A/B/C" "/A/D"
+OSL_SSPEC_string_should_eq "$return_value" "../../D"
+OSL_FILE_find_relative_path "/A/B/C" "/A/D/E"
+OSL_SSPEC_string_should_eq "$return_value" "../../D/E"
+OSL_FILE_find_relative_path "/A/B/C" "/D/E/F"
+OSL_SSPEC_string_should_eq "$return_value" "../../../D/E/F"
+
 
 OSL_SSPEC_end

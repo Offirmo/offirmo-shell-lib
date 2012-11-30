@@ -33,8 +33,7 @@ OSL_UI_ask_confirmation()
 	local message=$1
 	local timeout=$2
 	local return_code=1 # abort by default
-	local read_return_code=0
-	
+
 	echo -en $OSL_OUTPUT_STYLE_STRONG
 	echo $message
 	if [[ -n "$timeout" ]]; then
@@ -42,7 +41,7 @@ OSL_UI_ask_confirmation()
 	else
 		read -n1 -p "are you sure ? Choose : P)roceed, A)bort : "
 	fi
-	read_return_code=$?
+	local read_return_code=$?
 	echo -e $OSL_OUTPUT_STYLE_DEFAULT # reset color + new line
 
 	if [[ $read_return_code != 0 ]]; then

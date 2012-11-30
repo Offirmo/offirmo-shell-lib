@@ -14,17 +14,17 @@ source osl_inc_env.sh
 source osl_lib_output.sh
 
 
-if [[ -z "$OSL_debug" ]]; then
-	OSL_debug=false
+if [[ -z "$OSL_debug_activated" ]]; then
+	OSL_debug_activated=false
 fi
 
 # a quick and easy debug func
 # use a special style
 OSL_debug()
 {
-	$OSL_debug && echo -en $OSL_OUTPUT_STYLE_DEBUG
-	$OSL_debug && echo "[Debug] $*"
-	$OSL_debug && echo -en $OSL_ANSI_CODE_RESET
+	$OSL_debug_activated && echo -en $OSL_OUTPUT_STYLE_DEBUG
+	$OSL_debug_activated && echo -e "[Debug] $*"
+	$OSL_debug_activated && echo -en $OSL_ANSI_CODE_RESET
 }
 
 # same for a multi-lines buffer
@@ -44,5 +44,5 @@ OSL_debug_multi()
 	done
 	echo -en $OSL_ANSI_CODE_RESET
 
-	IFS=$OIFS # restore Internal field separator
+	IFS="$OIFS" # restore Internal field separator
 }

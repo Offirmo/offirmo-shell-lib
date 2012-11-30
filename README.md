@@ -20,7 +20,7 @@ One day, I cleaned them up and packed them in this lib. Enjoy !
 
 Requirements
 ------------
-The OSL is targeted at bash, though since I used to be forced to use ksh, it should be mostly compatible with ksh.
+The OSL is targeted at bash. Never tested with another shell.
 
 Installation
 ------------
@@ -54,12 +54,12 @@ libs :
 - `osl_inc_ansi_codes.sh  `  --> defines ANSI codes for color
 
 Special files :
- osl_help.sh  --> callable, display current OSL version
- osl_inc_env.sh  --> various constants
+- `osl_help.sh`  --> callable, display current OSL version
+- `osl_inc_env.sh`  --> various constants
 
 Experimental / in progress :
- osl_lib_interrupt_func.sh  --> exit hook (for mutex auto release)
- osl_lib_mutex.sh  --> create and use mutexes
+- `osl_lib_interrupt_func.sh`  --> exit hook (for mutex auto release)
+- `osl_lib_mutex.sh`  --> create and use mutexes
 
   
 That's it. You can now use the features.

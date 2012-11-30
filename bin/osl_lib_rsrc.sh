@@ -67,7 +67,7 @@ OSL_RSRC_end_managed_write_operation_with_error()
 	local control_dir=$1
 	local rsrc_id=$2
 
-	## do nothing. Sufficient for now.
+	## do nothing. Sufficient for now to leave the stamps in a bad state
 }
 
 

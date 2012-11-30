@@ -62,7 +62,7 @@ OSL_OUTPUT_warn()
 {
 	echo ""
 	echo -en $OSL_OUTPUT_STYLE_WARNING
-	echo "Warning : $*"
+	echo -e "Warning : $*"
 	echo -en $OSL_OUTPUT_STYLE_DEFAULT
 }
 
@@ -73,7 +73,7 @@ OSL_OUTPUT_display_error_message()
 	## send to stderr ?
 	echo ""
 	echo -en $OSL_OUTPUT_STYLE_ERROR
-	echo "XXX $*"
+	echo -e "XXX $*"
 	echo -en $OSL_OUTPUT_STYLE_DEFAULT
 }
 
@@ -83,7 +83,7 @@ OSL_OUTPUT_display_success_message()
 {
 	echo ""
 	echo -en $OSL_OUTPUT_STYLE_SUCCESS
-	echo "$*"
+	echo -e "$*"
 	echo -en $OSL_OUTPUT_STYLE_DEFAULT
 }
 
