@@ -22,6 +22,10 @@ OSL_SSPEC_describe "Offirmo Shell Lib safe rsrc manipulation"
 TEST_RSRC_DIR=$HOME
 TEST_RSRC_ID="test_rsrc"
 
+## adjust for test
+OSL_MUTEX_LOCKFILE_RETRY_WAIT_TIME=1
+OSL_MUTEX_LOCKFILE_RETRY_MAX_COUNT=3
+
 ## initial cleanup just in case
 OSL_RSRC_cleanup "$TEST_RSRC_DIR" $TEST_RSRC_ID
 
@@ -55,7 +59,9 @@ echo "* testing conflict case 1 : concurrent writes"
 OSL_RSRC_begin_managed_write_operation "$TEST_RSRC_DIR" $TEST_RSRC_ID
 OSL_SSPEC_return_code_should_be_OK $?
 OSL_RSRC_last_managed_operation_modif_date_SAVE_1=$OSL_STAMP_last_managed_operation_modif_date
-# concurrent modif, cannot detect concurrency at this stage
+# simulated concurrent modif
+# we release the lock to simulate a forced op
+OSL_MUTEX_unlock "$TEST_RSRC_DIR" $TEST_RSRC_ID
 OSL_RSRC_begin_managed_write_operation "$TEST_RSRC_DIR" $TEST_RSRC_ID
 OSL_SSPEC_return_code_should_be_OK $?
 OSL_RSRC_last_managed_operation_modif_date_SAVE_2=$OSL_STAMP_last_managed_operation_modif_date

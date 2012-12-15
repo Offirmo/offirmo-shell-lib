@@ -26,9 +26,12 @@ OSL_RSRC_check()
 {
 	local control_dir=$1
 	local rsrc_id=$2
+	local return_code=1 # !0 = error by default
 
 	OSL_STAMP_check_rsrc_ok "$control_dir" "$rsrc_id"
-	return $?
+	return_code=$?
+	
+	return $return_code
 }
 
 
@@ -36,8 +39,12 @@ OSL_RSRC_cleanup()
 {
 	local control_dir=$1
 	local rsrc_id=$2
+	local return_code=1 # !0 = error by default
 
 	OSL_STAMP_delete_rsrc_stamps "$control_dir" "$rsrc_id"
+	OSL_MUTEX_cleanup "$control_dir" "$rsrc_id"
+	return_code=$? # don't really care for this func
+	
 	return $?
 }
 
@@ -46,9 +53,20 @@ OSL_RSRC_begin_managed_write_operation()
 {
 	local control_dir=$1
 	local rsrc_id=$2
+	local return_code=1 # !0 = error by default
 
-	OSL_STAMP_begin_managed_write_operation "$control_dir" "$rsrc_id"
-	return $?
+	OSL_MUTEX_lock "$control_dir" "$rsrc_id"
+	return_code=$?
+
+	if [[ $return_code -eq 0 ]]; then
+		OSL_STAMP_begin_managed_write_operation "$control_dir" "$rsrc_id"
+		return_code=$?
+		if [[ $return_code -ne 0 ]]; then
+			OSL_MUTEX_unlock "$control_dir" "$rsrc_id"
+		fi
+	fi
+	
+	return $return_code
 }
 
 
@@ -56,9 +74,15 @@ OSL_RSRC_end_managed_write_operation()
 {
 	local control_dir=$1
 	local rsrc_id=$2
+	local return_code=1 # !0 = error by default
 
+	## assume we have the lock
 	OSL_STAMP_end_managed_write_operation "$control_dir" "$rsrc_id"
-	return $?
+	return_code=$?
+	OSL_MUTEX_unlock "$control_dir" "$rsrc_id"
+	# don't care about mutex for this op
+	
+	return $return_code
 }
 
 
@@ -67,7 +91,12 @@ OSL_RSRC_end_managed_write_operation_with_error()
 	local control_dir=$1
 	local rsrc_id=$2
 
-	## do nothing. Sufficient for now to leave the stamps in a bad state
+	## stamps : do nothing. Sufficient for now to leave the stamps in a bad state
+
+	OSL_MUTEX_unlock "$control_dir" "$rsrc_id"
+	# don't care about mutex for this op
+
+	return 0
 }
 
 
@@ -75,9 +104,13 @@ OSL_RSRC_begin_managed_read_operation()
 {
 	local control_dir=$1
 	local rsrc_id=$2
+	local return_code=1 # !0 = error by default
 
+	## no mutex
 	OSL_STAMP_begin_managed_read_operation "$control_dir" "$rsrc_id"
-	return $?
+	return_code=$?
+	
+	return $return_code
 }
 
 
@@ -85,7 +118,10 @@ OSL_RSRC_end_managed_read_operation()
 {
 	local control_dir=$1
 	local rsrc_id=$2
+	local return_code=1 # !0 = error by default
 
 	OSL_STAMP_end_managed_read_operation "$control_dir" "$rsrc_id"
-	return $?
+	return_code=$?
+	
+	return $return_code
 }
