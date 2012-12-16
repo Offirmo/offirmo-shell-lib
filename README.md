@@ -7,6 +7,8 @@ I use bash.
 
 Offirmo Shell Lib is available at : https://github.com/Offirmo/offirmo-shell-lib
 
+Note : The OSL has unit tests for maximum quality.
+
 Introduction 
 ============
 
@@ -40,7 +42,7 @@ On demand, source other OSL files as needed :
 
 libs :
 - `osl_lib_archive.sh     `  --> decompress any archive file
-- `osl_lib_capabilities.sh` --> detect version and check capabilities of host OS
+- `osl_lib_capabilities.sh`  --> detect version and check capabilities of host OS
 - `osl_lib_debug.sh       `  --> traces
 - `osl_lib_exit.sh        `  --> to abort execution with nice messages
 - `osl_lib_init.sh        `  --> allow output saving and various nice hacks
@@ -67,50 +69,7 @@ That's it. You can now use the features.
 
 The functions
 =============
-
-ANSI (color) codes
-------------------
-
-First there is a very useful feature : ANSI color codes definitions. Having an error message displayed in bright RED and a success message in green is extremely helpful !
-
- `echo -en $OSL_ANSI_CODE_SET_FG_GREEN$OSL_ANSI_CODE_SET_BRIGHT`
- `echo -n "Success !"`
- `echo -e $OSL_ANSI_CODE_RESET`
-
-Styled display (echo) functions
--------------------------------
-
-Various echo wrappers functions :
-
- `OSL_OUTPUT_notify <message>`
- `OSL_OUTPUT_warn <message>`           <-- in orange
- `OSL_OUTPUT_display_error_message <message>`   <-- in red of course
- `OSL_OUTPUT_warn_not_implemented`
- 
- `OSL_debug <message>`      <-- output in light gray prefixed with [debug]
- `OSL_debug_multi <multi-line message>`    <-- output in light gray prefixed with [debug]
-
-Flow control
-------------
-Those functions abort (exit) the execution of the script :
-
- OSL_EXIT_abort_execution_with_message <message>
- OSL_EXIT_abort_execution_because_not_implemented
-
-Saving output to a file
------------------------
-A cool feature is the ability to have a copy of the script output sent to a file, while still displaying normal output (using "tee")
-
- OSL_INIT_engage_tee_redirection_to_logfile
-
-Various UI functions
---------------------
-
- OSL_UI_ask_confirmation <pending operation>
- OSL_UI_pause
-
-and more, doc to do.
-
+For now, look inside the unit tests of the file you're interested in, or look in the file itself.
 
 TODO
 ====
@@ -118,5 +77,6 @@ TODO
 - Better doc ;)
 - Make default values redefinable
 - Make it easier to disable color
+- remove "bashisms"
 - asserts ?
 - More...
