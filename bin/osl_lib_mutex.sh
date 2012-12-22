@@ -12,7 +12,8 @@
 ## osl_lib_init is supposed to be already sourced
 source osl_lib_output.sh
 source osl_lib_debug.sh
-
+source osl_lib_file.sh
+source osl_lib_interrupt_func.sh
 
 ## Note :
 ## Shell mutexes are not trivial : http://stackoverflow.com/questions/185451/quick-and-dirty-way-to-ensure-only-one-instance-of-a-shell-script-is-running-at
@@ -57,15 +58,16 @@ OSL_MUTEX_lock()
 {
 	local lock_dir=$1
 	local rsrc_id=$2
+	local caller_info=$3
 	local return_code=1 # !0 = error by default
 
 	case $OSL_MUTEX_METHOD in
 	'lockfile')
-		OSL_MUTEX_lock_with_lockfile_method $lock_dir $rsrc_id
+		OSL_MUTEX_lock_with_lockfile_method "$lock_dir" "$rsrc_id" "$caller_info"
 		return_code=$?
 		;;
 	'symlink')
-		OSL_MUTEX_lock_with_symlink_method $lock_dir $rsrc_id
+		OSL_MUTEX_lock_with_symlink_method "$lock_dir" "$rsrc_id" "$caller_info"
 		return_code=$?
 		;;
 	*)
@@ -211,7 +213,8 @@ OSL_MUTEX_lock_with_lockfile_method()
 		if [[ $try_count -ge $OSL_MUTEX_LOCKFILE_RETRY_MAX_COUNT ]]; then
 			break
 		else
-			echo "still trying to acquire mutex for \"$rsrc_id\"..."
+			LOCK_OWNER=`stat -c "%U %y" "$lock_file" 2> /dev/null | awk -F"." '{ print $1 }'`
+			echo "still trying to acquire mutex for \"$rsrc_id\" held by : $LOCK_OWNER..."
 		fi
 	done
 
@@ -344,11 +347,12 @@ OSL_MUTEX_lock_with_symlink_method()
 {
 	local lock_dir=$1
 	local rsrc_id=$2
+	local caller_info=$3
 	local return_code=1 # !0 = error by default
 
 	local lock_link=$lock_dir/$rsrc_id$OSL_MUTEX_SUFFIX
 	
-	OSL_debug "attempting blocking lock on $lock_link..."
+	OSL_debug "[MUTEX] attempting blocking lock on $lock_link..."
 
 	## we don't use integrated retry feature to be able to display a message
 	local try_count=0
@@ -362,15 +366,16 @@ OSL_MUTEX_lock_with_symlink_method()
 			break
 		else
 			echo "still trying to acquire mutex for \"$rsrc_id\"..."
+			OSL_debug "Mutex is \"$(OSL_FILE_abspath "$lock_link")\", additional info : $caller_info"
 			sleep $OSL_MUTEX_LOCKFILE_RETRY_WAIT_TIME
 		fi
 	done
 
 	if [[ $return_code -eq 0 ]]; then
-		OSL_debug "  --> mutex acquisition success for $rsrc_id"
+		OSL_debug "[MUTEX]   --> mutex acquisition success for $rsrc_id"
 		#OSL_MUTEX_unreleased_mutexes="$OSL_MUTEX_unreleased_mutexes|$lock_link"
 	else
-		OSL_debug "  --> mutex acquisition FAILED for $rsrc_id"
+		OSL_debug "[MUTEX]   --> mutex acquisition FAILED for $rsrc_id"
 	fi
 		
 	#OSL_debug "mutexes currently held : $OSL_MUTEX_unreleased_mutexes"
@@ -387,16 +392,16 @@ OSL_MUTEX_trylock_with_symlink_method()
 	
 	local lock_link=$lock_dir/$rsrc_id$OSL_MUTEX_SUFFIX
 
-	OSL_debug "attempting non-blocking lock on $lock_link..."
+	OSL_debug "[MUTEX] attempting non-blocking lock on $lock_link..."
 
 	ln -s -T "$lock_dir" "$lock_link"  2> /dev/null
 	return_code=$?
 
 	if [[ $return_code -eq 0 ]]; then
-		OSL_debug "  --> mutex non-blocking acquisition success for $rsrc_id"
+		OSL_debug "[MUTEX]   --> mutex non-blocking acquisition success for $rsrc_id"
 		#OSL_MUTEX_unreleased_mutexes="$OSL_MUTEX_unreleased_mutexes|$lock_link"
 	else
-		OSL_debug "  --> mutex non-blocking acquisition FAILED for $rsrc_id"
+		OSL_debug "[MUTEX]   --> mutex non-blocking acquisition FAILED for $rsrc_id"
 	fi
 
 	return $return_code
@@ -412,17 +417,17 @@ OSL_MUTEX_unlock_with_symlink_method()
 	local lock_link=$lock_dir/$rsrc_id$OSL_MUTEX_SUFFIX
 
 	#OSL_debug "mutexes currently held : $OSL_MUTEX_unreleased_mutexes"
-	OSL_debug "unlocking $lock_link..."
+	OSL_debug "[MUTEX] unlocking $lock_link..."
 
 	[ -e "$lock_link" ] && mv "$lock_link" "$lock_link.deleteme"
 	rm -f "$lock_link.deleteme"
 	return_code=$?
 
 	if [[ $return_code -eq 0 ]]; then
-		OSL_debug "  --> mutex release success for $rsrc_id"
+		OSL_debug "[MUTEX]   --> mutex release success for $rsrc_id"
 		## TODO
 	else
-		OSL_debug "  --> mutex release FAILED for $rsrc_id"
+		OSL_debug "[MUTEX]   --> mutex release FAILED for $rsrc_id"
 	fi
 	
 	return $return_code
@@ -437,7 +442,7 @@ OSL_MUTEX_force_lock_with_symlink_method()
 	
 	local lock_link=$lock_dir/$rsrc_id$OSL_MUTEX_SUFFIX
 	
-	OSL_debug "attempting force lock on $lock_link..."
+	OSL_debug "[MUTEX] attempting force lock on $lock_link..."
 	
 	[ -e "$lock_link" ] && mv "$lock_link" "$lock_link.deleteme"
 	rm -f "$lock_link.deleteme"
@@ -445,10 +450,10 @@ OSL_MUTEX_force_lock_with_symlink_method()
 	return_code=$?
 	
 	if [[ $return_code -eq 0 ]]; then
-		OSL_debug "  --> mutex forced acquisition success for $rsrc_id"
+		OSL_debug "[MUTEX]   --> mutex forced acquisition success for $rsrc_id"
 		#OSL_MUTEX_unreleased_mutexes="$OSL_MUTEX_unreleased_mutexes|$lock_link"
 	else
-		OSL_debug "  --> mutex forced acquisition FAILED for $rsrc_id"
+		OSL_debug "[MUTEX]   --> mutex forced acquisition FAILED for $rsrc_id"
 	fi
 	
 	#OSL_debug "mutexes currently held : $OSL_MUTEX_unreleased_mutexes"

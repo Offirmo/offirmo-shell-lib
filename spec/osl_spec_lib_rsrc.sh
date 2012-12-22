@@ -58,21 +58,21 @@ OSL_SSPEC_return_code_should_be_OK $?
 echo "* testing conflict case 1 : concurrent writes"
 OSL_RSRC_begin_managed_write_operation "$TEST_RSRC_DIR" $TEST_RSRC_ID
 OSL_SSPEC_return_code_should_be_OK $?
-OSL_RSRC_last_managed_operation_modif_date_SAVE_1=$OSL_STAMP_last_managed_operation_modif_date
+OSL_RSRC_state_SAVE_1=$OSL_RSRC_state
 # simulated concurrent modif
 # we release the lock to simulate a forced op
 OSL_MUTEX_unlock "$TEST_RSRC_DIR" $TEST_RSRC_ID
 OSL_RSRC_begin_managed_write_operation "$TEST_RSRC_DIR" $TEST_RSRC_ID
 OSL_SSPEC_return_code_should_be_OK $?
-OSL_RSRC_last_managed_operation_modif_date_SAVE_2=$OSL_STAMP_last_managed_operation_modif_date
+OSL_RSRC_state_SAVE_2=$OSL_RSRC_state
 
 # restore first call value
-OSL_STAMP_last_managed_operation_modif_date=$OSL_RSRC_last_managed_operation_modif_date_SAVE_1
+OSL_RSRC_state=$OSL_RSRC_state_SAVE_1
 # should fail
 OSL_RSRC_end_managed_write_operation "$TEST_RSRC_DIR" $TEST_RSRC_ID
 OSL_SSPEC_return_code_should_be_NOK $?
 # restore second call value
-OSL_STAMP_last_managed_operation_modif_date=$OSL_RSRC_last_managed_operation_modif_date_SAVE_2
+OSL_RSRC_state=$OSL_RSRC_state_SAVE_2
 # should also fail
 OSL_RSRC_end_managed_write_operation "$TEST_RSRC_DIR" $TEST_RSRC_ID
 OSL_SSPEC_return_code_should_be_NOK $?
@@ -81,7 +81,6 @@ OSL_SSPEC_return_code_should_be_NOK $?
 echo "* testing conflict case 2 : read while writing"
 OSL_RSRC_begin_managed_write_operation "$TEST_RSRC_DIR" $TEST_RSRC_ID
 OSL_SSPEC_return_code_should_be_OK $?
-OSL_RSRC_last_managed_operation_modif_date_SAVE_1=$OSL_STAMP_last_managed_operation_modif_date
 ## read while there is a write
 ## conflict should be detected
 OSL_RSRC_begin_managed_read_operation "$TEST_RSRC_DIR" $TEST_RSRC_ID
@@ -94,22 +93,22 @@ OSL_SSPEC_return_code_should_be_OK $?
 echo "* testing conflict case 3 : write while we are reading"
 OSL_RSRC_begin_managed_read_operation "$TEST_RSRC_DIR" $TEST_RSRC_ID
 OSL_SSPEC_return_code_should_be_OK $?
-OSL_RSRC_last_managed_operation_modif_date_SAVE_1=$OSL_STAMP_last_managed_operation_modif_date
+OSL_RSRC_state_SAVE_1=$OSL_RSRC_state
 # modif while we are reading
 OSL_RSRC_begin_managed_write_operation "$TEST_RSRC_DIR" $TEST_RSRC_ID
 OSL_SSPEC_return_code_should_be_OK $?
-OSL_RSRC_last_managed_operation_modif_date_SAVE_2=$OSL_STAMP_last_managed_operation_modif_date
+OSL_RSRC_state_SAVE_2=$OSL_RSRC_state
 # another read : must fail at once
 OSL_RSRC_begin_managed_read_operation "$TEST_RSRC_DIR" $TEST_RSRC_ID
 OSL_SSPEC_return_code_should_be_NOK $?
 
 # restore first call value
-OSL_STAMP_last_managed_operation_modif_date=$OSL_RSRC_last_managed_operation_modif_date_SAVE_1
+OSL_RSRC_state=$OSL_RSRC_state_SAVE_1
 # should fail
 OSL_RSRC_end_managed_read_operation "$TEST_RSRC_DIR" $TEST_RSRC_ID
 OSL_SSPEC_return_code_should_be_NOK $?
 # restore second call value
-OSL_STAMP_last_managed_operation_modif_date=$OSL_RSRC_last_managed_operation_modif_date_SAVE_2
+OSL_RSRC_state=$OSL_RSRC_state_SAVE_2
 # this one should suceed
 OSL_RSRC_end_managed_write_operation "$TEST_RSRC_DIR" $TEST_RSRC_ID
 OSL_SSPEC_return_code_should_be_OK $?

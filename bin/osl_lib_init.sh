@@ -33,7 +33,6 @@ OSL_INIT_ensure_dir()
 source osl_inc_env.sh
 
 
-
 ## Redefine the "source" shell command.
 # This is a hack to portabily be able to know the currently sourced script
 ## hat tip : http://dbaspot.com/shell/391701-how-get-script-name-when-sourcing.html
@@ -148,8 +147,3 @@ OSL_INIT_engage_tee_redirection_to_logfile()
 		# ... proceed with execution
 	fi
 }
-
-
-## install the cleanup func
-source osl_lib_interrupt_func.sh
-OS_INTERRUPT_cleanup_func_setup

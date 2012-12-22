@@ -123,3 +123,15 @@ OSL_FILE_find_relative_path()
 
 	return 0
 }
+
+
+## Absolute path of a file
+## avantage over readlink : works even if we DON'T want symlinks to be followed
+## thanks http://stackoverflow.com/a/3915986/587407
+OSL_FILE_abspath()
+{
+	case "$1" in
+	/*)printf "%s\n" "$1";;
+	*)printf "%s\n" "$PWD/$1";;
+	esac;
+}

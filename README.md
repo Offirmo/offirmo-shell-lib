@@ -45,11 +45,13 @@ libs :
 - `osl_lib_capabilities.sh`  --> detect version and check capabilities of host OS
 - `osl_lib_debug.sh       `  --> traces
 - `osl_lib_exit.sh        `  --> to abort execution with nice messages
+- `osl_lib_file.sh        `  --> path manipulations, ensure a line is
 - `osl_lib_init.sh        `  --> allow output saving and various nice hacks
+- `osl_lib_mutex.sh       `  --> create and use mutexes (note : use 'rsrc' wrapper for additional features)
 - `osl_lib_output.sh      `  --> various display functions : error, warnings...
 - `osl_lib_rsrc.sh        `  --> safe rsrc manipulation protected by mutex
 - `osl_lib_sspec.sh       `  --> shell unit tests, inspired from rspec
-- `osl_lib_stamp.sh       `  --> manip of stamp files to detect access time and interferences
+- `osl_lib_stamp.sh       `  --> manip of stamp files to detect access time and interferences (note : use 'rsrc' wrapper for additional features)
 - `osl_lib_string.sh      `  --> string utilities
 - `osl_lib_ui.sh          `  --> UI functions like asking yes or no, pause...
 - `osl_lib_version.sh     `  --> version comparison utilities (newer/older)
@@ -61,7 +63,6 @@ Special files :
 
 Experimental / in progress :
 - `osl_lib_interrupt_func.sh`  --> exit hook (for mutex auto release)
-- `osl_lib_mutex.sh`  --> create and use mutexes
 
   
 That's it. You can now use the features.
@@ -69,12 +70,17 @@ That's it. You can now use the features.
 
 The functions
 =============
+
 For now, look inside the unit tests of the file you're interested in, or look in the file itself.
 
 TODO
 ====
 
 - Better doc ;)
+- improve decompression function
+- refactor mutex code to avoid duplication
+- mutex switch from read to write ?
+- forward and aggregate state in rsrc fuctions
 - Make default values redefinable
 - Make it easier to disable color
 - remove "bashisms"

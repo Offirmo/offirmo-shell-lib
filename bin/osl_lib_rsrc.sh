@@ -49,18 +49,69 @@ OSL_RSRC_cleanup()
 }
 
 
+## will forcefully take any lock
+OSL_RSRC_force_begin_managed_write_operation()
+{
+	local control_dir=$1
+	local rsrc_id=$2
+	local caller_info=$3
+	local return_code=1 # !0 = error by default
+
+	OSL_MUTEX_force_lock "$control_dir" "$rsrc_id" "$caller_info"
+	return_code=$?
+
+	if [[ $return_code -eq 0 ]]; then
+		OSL_STAMP_begin_managed_write_operation "$control_dir" "$rsrc_id" "$caller_info"
+		return_code=$?
+		OSL_RSRC_state=$OSL_STAMP_last_managed_operation_modif_date
+		if [[ $return_code -ne 0 ]]; then
+			OSL_MUTEX_unlock "$control_dir" "$rsrc_id"
+		fi
+	fi
+	
+	return $return_code
+}
+
+
+## normal, will wait if lock is held
 OSL_RSRC_begin_managed_write_operation()
 {
 	local control_dir=$1
 	local rsrc_id=$2
+	local caller_info=$3
 	local return_code=1 # !0 = error by default
 
-	OSL_MUTEX_lock "$control_dir" "$rsrc_id"
+	OSL_MUTEX_lock "$control_dir" "$rsrc_id" "$caller_info"
 	return_code=$?
 
 	if [[ $return_code -eq 0 ]]; then
-		OSL_STAMP_begin_managed_write_operation "$control_dir" "$rsrc_id"
+		OSL_STAMP_begin_managed_write_operation "$control_dir" "$rsrc_id" "$caller_info"
 		return_code=$?
+		OSL_RSRC_state=$OSL_STAMP_last_managed_operation_modif_date
+		if [[ $return_code -ne 0 ]]; then
+			OSL_MUTEX_unlock "$control_dir" "$rsrc_id"
+		fi
+	fi
+	
+	return $return_code
+}
+
+
+## will not wait if lock is held
+OSL_RSRC_try_managed_write_operation()
+{
+	local control_dir=$1
+	local rsrc_id=$2
+	local caller_info=$3
+	local return_code=1 # !0 = error by default
+
+	OSL_MUTEX_trylock "$control_dir" "$rsrc_id" "$caller_info"
+	return_code=$?
+
+	if [[ $return_code -eq 0 ]]; then
+		OSL_STAMP_begin_managed_write_operation "$control_dir" "$rsrc_id" "$caller_info"
+		return_code=$?
+		OSL_RSRC_state=$OSL_STAMP_last_managed_operation_modif_date
 		if [[ $return_code -ne 0 ]]; then
 			OSL_MUTEX_unlock "$control_dir" "$rsrc_id"
 		fi
@@ -77,6 +128,7 @@ OSL_RSRC_end_managed_write_operation()
 	local return_code=1 # !0 = error by default
 
 	## assume we have the lock
+	OSL_STAMP_last_managed_operation_modif_date=$OSL_RSRC_state
 	OSL_STAMP_end_managed_write_operation "$control_dir" "$rsrc_id"
 	return_code=$?
 	OSL_MUTEX_unlock "$control_dir" "$rsrc_id"
@@ -109,6 +161,7 @@ OSL_RSRC_begin_managed_read_operation()
 	## no mutex
 	OSL_STAMP_begin_managed_read_operation "$control_dir" "$rsrc_id"
 	return_code=$?
+	OSL_RSRC_state=$OSL_STAMP_last_managed_operation_modif_date
 	
 	return $return_code
 }
@@ -120,6 +173,7 @@ OSL_RSRC_end_managed_read_operation()
 	local rsrc_id=$2
 	local return_code=1 # !0 = error by default
 
+	OSL_STAMP_last_managed_operation_modif_date=$OSL_RSRC_state
 	OSL_STAMP_end_managed_read_operation "$control_dir" "$rsrc_id"
 	return_code=$?
 	

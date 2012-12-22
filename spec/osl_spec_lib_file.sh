@@ -113,4 +113,13 @@ OSL_FILE_find_relative_path "/A/B/C" "/D/E/F"
 OSL_SSPEC_string_should_eq "$return_value" "../../../D/E/F"
 
 
+echo "test OSL_FILE_abspath"
+## we use this own script as a test file,
+## since we conveniently already have all necessary infos
+OSL_SSPEC_string_should_eq "$(OSL_FILE_abspath "$OSL_INIT_script_full_path")" "$OSL_INIT_script_full_path"
+owd=`pwd`
+cd "$OSL_INIT_script_full_dir"
+OSL_SSPEC_string_should_eq "$(OSL_FILE_abspath "$OSL_INIT_script_base_name")" "$OSL_INIT_script_full_path"
+cd "$owd"
+
 OSL_SSPEC_end
