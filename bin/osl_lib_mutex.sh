@@ -419,9 +419,12 @@ OSL_MUTEX_unlock_with_symlink_method()
 	#OSL_debug "mutexes currently held : $OSL_MUTEX_unreleased_mutexes"
 	OSL_debug "[MUTEX] unlocking $lock_link..."
 
-	[ -e "$lock_link" ] && mv "$lock_link" "$lock_link.deleteme"
+	[ -h "$lock_link" ] && mv "$lock_link" "$lock_link.deleteme"
 	rm -f "$lock_link.deleteme"
 	return_code=$?
+
+	[ -h "$lock_link" ] && echo "XXX strange, mutex is still here ??!?!"
+	rm -f "$lock_link"
 
 	if [[ $return_code -eq 0 ]]; then
 		OSL_debug "[MUTEX]   --> mutex release success for $rsrc_id"
