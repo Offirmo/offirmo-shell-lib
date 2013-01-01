@@ -114,17 +114,36 @@ OSL_STAMP_touch_stamps()
 	local stamp_1=$1
 	local stamp_2=$2
 
-	touch "$stamp_1"
-	## problem : it seems that
-	##   touch foo
-	## and
-	##   touch --reference "foo" "bar"
-	## have different resolutions on a RAM fs (seen by experience)
-	## so we use --reference on oneself for the first stamp to give him the same rounding
-	touch --reference "$stamp_1" "$stamp_1"
+	if [[ -f "$stamp_1" ]]; then
+		## stamp file already exists.
+		## problem #1
+		## it seems we can't set an arbitrary time to a file we don't own
+		## this is a problem since those stamps are meant to be shared.
+		## So we use a trick ! (hat tip to a colleague of mine)
+		#touch "$stamp_1"  <-- don't work
+		cp "$stamp_1" "${stamp_1}.bis"
+		mv "${stamp_1}.bis" "$stamp_1"
+		## now we have ownership and the file was touched !
+	else
+		## stamp file doesn't exist yet
+		touch "$stamp_1"
+	fi
 	
+	## problem #2 : it happens that : (seen by experience)
+	## on a RAM fs,
+	##   touch --reference "foo" "bar"
+	## has a different resolution than other file manipulations
+	## like simple 'touch' or copy/write.
+	## So we use --reference on oneself for the first stamp to give him the same rounding
+	## or else times wouldn't match...
+	touch --reference "$stamp_1" "$stamp_1"
+
 	## we can now safely proceed with the second stamp (if any)
 	if [[ -n "$stamp_2" ]]; then
+		## same trick : we take ownership of the file
+		cp "$stamp_2" "${stamp_2}.bis"
+		mv "${stamp_2}.bis" "$stamp_2"
+		## we can now give him an arbitrary date
 		touch --reference "$stamp_1" "$stamp_2"
 	fi
 	

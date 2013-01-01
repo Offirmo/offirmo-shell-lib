@@ -20,6 +20,7 @@ OSL_SSPEC_describe "Offirmo Shell Lib stamps"
 ## base
 
 TEST_STAMP_DIR=$HOME
+#TEST_STAMP_DIR=/a_ram_fs
 TEST_STAMP_PATH=$TEST_STAMP_DIR/osl_stamp_unit_test.stamp
 
 echo "* testing base functions : stamp creation mode 1"
