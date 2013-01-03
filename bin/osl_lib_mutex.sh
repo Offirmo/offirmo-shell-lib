@@ -23,8 +23,10 @@ if [[ -z "$OSL_MUTEX_METHOD" ]]; then
 	which lockfile 2>&1 > /dev/null
 	if [[ $? -eq 0 ]]; then
 		## `lockfile` is available, use, it's the best method
+		OSL_debug "  --> using 'lockfile' for mutexes..."
 		OSL_MUTEX_METHOD='lockfile'
 	else
+		OSL_debug "  --> using 'symlink' for mutexes..."
 		OSL_MUTEX_METHOD='symlink'
 	fi
 fi
