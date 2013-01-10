@@ -3,7 +3,7 @@ Offirmo-shell-lib
 
 The Offirmo Shell Lib (OSL) is a collection of useful shell functions for robust and advanced shell scripts.
 
-I use bash.
+Requirements : I use bash.
 
 Offirmo Shell Lib is available at : https://github.com/Offirmo/offirmo-shell-lib
 
@@ -86,3 +86,4 @@ TODO
 - remove "bashisms"
 - asserts ?
 - More...
+
