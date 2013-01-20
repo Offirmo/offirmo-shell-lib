@@ -41,7 +41,7 @@ source()
 {
 	# we skip this file itself
 	# because in other funcs in this file we may want to know the last parent sourced file
-	if [[ ! "$1" = "osl_lib_init.sh" ]]; then
+	if [[ ! "$1" == "osl_lib_init.sh" ]]; then
 		sourced_script=$1
 	fi
 	
@@ -52,6 +52,7 @@ source()
 
 ### useful dynamic vars
 
+
 # formated script invocation date
 if [[ -z "$OSL_INIT_exec_date_for_human" ]]; then
 	# for human (useful in display)
@@ -61,22 +62,25 @@ if [[ -z "$OSL_INIT_exec_date_for_human" ]]; then
 	OSL_INIT_exec_date_for_file="$OSL_INIT_exec_day_date_for_file-`date +%Hh%Mm%S`"
 fi
 
-# It's often useful to have the script base name and full path.
-# But this is tricky because previous commands may change current dir
-# or invocation in or from other scripts may change script name.
-# so we query intelligently only if needed
-if [[ -z $OSL_INIT_script_full_path ]]; then
+
+## It's often useful to have the script base name and full path.
+## But this is tricky because previous commands may change current dir
+## or invocation in or from other scripts may change script name.
+## so we query intelligently only if needed
+## REM : When sourced directly from shell, $0 is not pointing to a file.
+if [[ -z $OSL_INIT_script_full_path && "$0" != "-bash" ]]; then
 	OSL_INIT_script_full_path=`readlink -f "$0"`
-	#echo "script_full_path set to $script_full_path"
+	#echo "OSL_INIT_script_full_path set to $OSL_INIT_script_full_path"
 	OSL_INIT_script_base_name=`basename "$OSL_INIT_script_full_path"`
-	#echo "script_base_name set to $script_base_name"
-	OSL_INIT_script_full_dir=`dirname $OSL_INIT_script_full_path`
-	#echo "script_full_dir  set to $script_full_dir"
+	#echo "OSL_INIT_script_base_name set to $OSL_INIT_script_base_name"
+	OSL_INIT_script_full_dir=`dirname "$OSL_INIT_script_full_path"`
+	#echo "OSL_INIT_script_full_dir  set to $OSL_INIT_script_full_dir"
 
 	# preferred invocation name (useful when there is an alias)
 	# by default, = script name
 	OSL_INIT_script_preferred_invocation_name=$OSL_INIT_script_base_name
 fi
+
 
 # backup of the "Internal Field Separator"
 # Very useful because we often need to change it.
@@ -87,6 +91,7 @@ OSL_INIT_restore_default_IFS()
 {
 	IFS=$OSL_INIT_ORIGINAL_IFS
 }
+
 
 OSL_INIT_DEFAULT_LOG_DIR=~/logs
 mkdir -p $OSL_INIT_DEFAULT_LOG_DIR
