@@ -11,5 +11,5 @@
 
 
 ### Current stamp and version
-OSL_VERSION="1.0.1"
-OSL_STAMP="2012/12/28"
+OSL_VERSION="1.1.0"
+OSL_STAMP="2013/01/20"
