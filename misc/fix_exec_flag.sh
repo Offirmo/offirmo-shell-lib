@@ -11,4 +11,5 @@ set -ev
 ## supposedly run from OSL root dir
 
 chmod +x bin/osl_help.sh
+chmod +x bin/osl_version.sh
 chmod +x spec/*.sh
