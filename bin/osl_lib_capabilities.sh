@@ -9,6 +9,10 @@
 ## This file is meant to be sourced :
 ##    source osl_lib_capabilities.sh
 
+
+source osl_lib_output.sh
+
+
 OSL_CAPABILITIES_internal_GetVersionFromFile()
 {
 	VERSION=`cat $1 | tr "\n" ' ' | sed s/.*VERSION.*=\ // `
@@ -119,4 +123,63 @@ OSL_CAPABILITIES_is_debian_based()
 OSL_CAPABILITIES_has_apt()
 {
 	OSL_CAPABILITIES_is_debian_based
+}
+
+
+OSL_CAPABILITIES_ensure_has_apt()
+{
+	if [[ "$(OSL_CAPABILITIES_has_apt)" != "true" ]]; then
+		OSL_OUTPUT_display_error_message "this system has no apt capabilities !"
+	fi
+}
+
+
+OSL_CAPABILITIES_APT_get_packet_status()
+{
+	local pkt_name=$1
+	OSL_CAPABILITIES_ensure_has_apt
+
+	local raw_status=`dpkg-query -W -f='${Status}' $pkt_name`
+
+	# REM from man apt-query
+	# Package status:
+	# 	n = Not-installed
+	# 	c = Config-files
+	# 	H = Half-installed
+	# 	U = Unpacked
+	# 	F = Half-configured
+	# 	W = Triggers-awaiting
+	# 	t = Triggers-pending
+	# 	i = Installed
+
+	## post-processing
+	case "$raw_status" in
+	'install ok installed')
+		echo "Installed"
+		;;
+	*)
+		echo "$raw_status"
+		;;
+	esac
+}
+
+
+OSL_CAPABILITIES_APT_get_packet_candidate_version()
+{
+	local pkt_name=$1
+	OSL_CAPABILITIES_ensure_has_apt
+
+	## get packet infos
+	local policy_candidate_raw_line=`apt-cache policy $pkt_name | grep 'Candidate:'`
+
+	## remove useless first part
+	local apt_version=${policy_candidate_raw_line:13}
+
+	## now the version given is not the tool version.
+	## we want sompthing like x.y.z
+	## so let's do some cleaning
+	## Thank you http://stackoverflow.com/a/14464436/587407
+	local pkt_version=`echo "$apt_version" | grep -Po "[\d\.]*(?=-)"`
+
+	echo "$pkt_version"
 }

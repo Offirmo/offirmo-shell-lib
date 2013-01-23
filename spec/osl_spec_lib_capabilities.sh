@@ -33,12 +33,21 @@ echo "OSL_CAPABILITIES_ARCH        = $OSL_CAPABILITIES_ARCH"
 echo "OSL_CAPABILITIES_DIST        = $OSL_CAPABILITIES_DIST"
 echo "OSL_CAPABILITIES_PSEUDONAME  = $OSL_CAPABILITIES_PSEUDONAME"
 echo "OSL_CAPABILITIES_INFO_FILE   = $OSL_CAPABILITIES_INFO_FILE"
-
+echo
 echo "OSL_CAPABILITIES_OSSTR       = $OSL_CAPABILITIES_OSSTR"
-
+echo
 echo "OSL_CAPABILITIES_is_debian_based() -> $(OSL_CAPABILITIES_is_debian_based)"
 echo "OSL_CAPABILITIES_has_apt()         -> $(OSL_CAPABILITIES_has_apt)"
+echo
 
+test=$(OSL_CAPABILITIES_APT_get_packet_status  bash)
+OSL_SSPEC_string_should_eq "Installed" "$test"
+
+## Note : there are various version cleaning cases
+test=$(OSL_CAPABILITIES_APT_get_packet_candidate_version  bash)
+OSL_SSPEC_string_should_eq "4.2" "$test"
+test=$(OSL_CAPABILITIES_APT_get_packet_candidate_version  automake)
+OSL_SSPEC_string_should_eq "1.11.3" "$test"
 
 ## tested on a RedHat :
 # OSL_CAPABILITIES_OS          = Linux
