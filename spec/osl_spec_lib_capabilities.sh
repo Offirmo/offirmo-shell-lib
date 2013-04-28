@@ -7,6 +7,7 @@
 ##   - unit test of string functions
 ##
 ## This file is meant to be executed.
+OSL_debug_activated=true
 
 source osl_lib_init.sh
 
@@ -48,6 +49,9 @@ test=$(OSL_CAPABILITIES_APT_get_packet_candidate_version  bash)
 OSL_SSPEC_string_should_eq "4.2" "$test"
 test=$(OSL_CAPABILITIES_APT_get_packet_candidate_version  automake)
 OSL_SSPEC_string_should_eq "1.11.3" "$test"
+## this one has a ~
+test=$(OSL_CAPABILITIES_APT_get_packet_candidate_version  nodejs)
+OSL_SSPEC_string_should_eq "0.6.12" "$test"
 
 ## tested on a RedHat :
 # OSL_CAPABILITIES_OS          = Linux

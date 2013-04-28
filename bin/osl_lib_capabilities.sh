@@ -167,19 +167,29 @@ OSL_CAPABILITIES_APT_get_packet_status()
 OSL_CAPABILITIES_APT_get_packet_candidate_version()
 {
 	local pkt_name=$1
+	#echo "pkt_name = '$pkt_name'"
 	OSL_CAPABILITIES_ensure_has_apt
 
 	## get packet infos
 	local policy_candidate_raw_line=`apt-cache policy $pkt_name | grep 'Candidate:'`
+	#echo "policy_candidate_raw_line = '$policy_candidate_raw_line'"
 
 	## remove useless first part
 	local apt_version=${policy_candidate_raw_line:13}
+	#echo "apt_version = '$apt_version'"
 
 	## now the version given is not the tool version.
 	## we want sompthing like x.y.z
 	## so let's do some cleaning
 	## Thank you http://stackoverflow.com/a/14464436/587407
 	local pkt_version=`echo "$apt_version" | grep -Po "[\d\.]*(?=-)"`
+	#echo "pkt_version = '$pkt_version'"
+	local pkt_version_tilde=`echo "$apt_version" | grep -Po "[\d\.]*(?=~)"`
+	#echo "pkt_version_tilde = '$pkt_version_tilde'"
+
+	if [[ ${#pkt_version_tilde} -gt 0 ]]; then
+		pkt_version=$pkt_version_tilde
+	fi
 
 	echo "$pkt_version"
 }
