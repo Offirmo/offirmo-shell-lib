@@ -134,4 +134,14 @@ OSL_FILE_abspath()
 	/*)printf "%s\n" "$1";;
 	*)printf "%s\n" "$PWD/$1";;
 	esac;
+
+
+## absolute, expanded path of the given file
+## useful since expanding ~ in bash may be tricky
+## thanks http://stackoverflow.com/a/11949850/587407
+OSL_FILE_realpath()
+{
+	local path="$*"
+	path="`eval echo ${path//>}`"
+	readlink -m "$path"
 }

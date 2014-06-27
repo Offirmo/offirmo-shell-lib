@@ -125,4 +125,10 @@ cd "$OSL_INIT_script_full_dir"
 OSL_SSPEC_string_should_eq "$(OSL_FILE_abspath "$OSL_INIT_script_base_name")" "$OSL_INIT_script_full_path"
 cd "$owd"
 
+
+echo "test OSL_FILE_realpath"
+OSL_SSPEC_string_should_eq "/home/`whoami`/.bashrc" "$(OSL_FILE_realpath "~/.bashrc")"
+OSL_SSPEC_string_should_eq "`pwd`/osl_spec_lib_file.sh" "$(OSL_FILE_realpath "osl_spec_lib_file.sh")"
+
+
 OSL_SSPEC_end
