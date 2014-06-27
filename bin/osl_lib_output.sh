@@ -15,7 +15,7 @@ source osl_inc_ansi_codes.sh
 ## default / reset
 OSL_OUTPUT_STYLE_DEFAULT=${OSL_ANSI_CODE_RESET}
 ## base
-OSL_OUTPUT_STYLE_STRONG=${OSL_ANSI_CODE_SET_BRIGHT}${OSL_ANSI_CODE_SET_FG_BLACK} # strong but not an error
+OSL_OUTPUT_STYLE_STRONG=${OSL_ANSI_CODE_SET_BRIGHT} # strong but not an error
 OSL_OUTPUT_STYLE_WEAK=${OSL_ANSI_CODE_SET_FG_WHITE} # opposite of strong
 OSL_OUTPUT_STYLE_PROBLEM=${OSL_ANSI_CODE_SET_FG_RED}
 OSL_OUTPUT_STYLE_WARNING=${OSL_ANSI_CODE_SET_FG_YELLOW}
@@ -29,19 +29,28 @@ OSL_OUTPUT_STYLE_ERROR=${OSL_OUTPUT_STYLE_PROBLEM}
 ## useful functions
 OSL_OUTPUT_bold()
 {
-	echo ${OSL_ANSI_CODE_SET_BRIGHT}$*${OSL_ANSI_CODE_RESET}
+	echo -en $OSL_ANSI_CODE_SET_BRIGHT
+	echo "$*"
+	echo -en ${OSL_ANSI_CODE_RESET}
 }
 OSL_OUTPUT_under()
 {
-	echo ${OSL_ANSI_CODE_SET_UNDERLINE}$*${OSL_ANSI_CODE_RESET}
+	## seems this code doesn't really exists...
+	echo -en ${OSL_ANSI_CODE_SET_UNDERLINE}
+	echo "$*"
+	echo -en ${OSL_ANSI_CODE_RESET}
 }
 OSL_OUTPUT_blue()
 {
-	echo ${OSL_ANSI_CODE_SET_FG_BLUE}$*${OSL_ANSI_CODE_RESET}
+	echo -en ${OSL_ANSI_CODE_SET_FG_BLUE}
+	echo "$*"
+	echo -en ${OSL_ANSI_CODE_RESET}
 }
 OSL_OUTPUT_red()
 {
-	echo ${OSL_ANSI_CODE_SET_FG_RED}$*${OSL_ANSI_CODE_RESET}
+	echo -en ${OSL_ANSI_CODE_SET_FG_RED}
+	echo "$*"
+	echo -en ${OSL_ANSI_CODE_RESET}
 }
 
 
