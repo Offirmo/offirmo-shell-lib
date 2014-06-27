@@ -27,7 +27,7 @@ it_should_display_properly_this_foreground_color()
 	# params
 	local color_radix=$1
 	local color_code="OSL_ANSI_CODE_SET_FG_${color_radix}"
-	
+
 	local test_cmd="echo -e \"-\$$color_code This line should be in $color_radix on white. \$OSL_ANSI_CODE_RESET\""
 	eval $test_cmd
 }
@@ -36,7 +36,7 @@ it_should_display_properly_this_background_color()
 	# params
 	local color_radix=$1
 	local color_code="OSL_ANSI_CODE_SET_BG_${color_radix}"
-	
+
 	local test_cmd="echo -e \"-$OSL_ANSI_CODE_SET_FG_WHITE\$$color_code This line should have a $color_radix background. \$OSL_ANSI_CODE_RESET\""
 	eval $test_cmd
 }
@@ -45,7 +45,7 @@ it_should_display_properly_this_color()
 {
 	# params
 	local color_radix=$1
-	
+
 	it_should_display_properly_this_foreground_color $color_radix
 	it_should_display_properly_this_background_color $color_radix
 }

@@ -31,7 +31,7 @@ OSL_CAPABILITIES_detect_current_linux_distribution()
 	local uname_s=`uname --kernel-name`
 	local uname_r=`uname --kernel-release`
 	local uname_p=`uname --processor`
-	
+
 	OSL_CAPABILITIES_OS=$uname_s ## for now
 	OSL_CAPABILITIES_REV=$uname_r ## for now
 	OSL_CAPABILITIES_ARCH=$uname_p ## for now
@@ -81,7 +81,7 @@ OSL_CAPABILITIES_detect_current_linux_distribution()
 			OSL_CAPABILITIES_INFO_FILE="/etc/UnitedLinux-release"
 			OSL_CAPABILITIES_DIST="${OSL_CAPABILITIES_DIST}[`cat "$OSL_CAPABILITIES_INFO_FILE" | tr "\n" ' ' | sed s/VERSION.*//`]"
 		fi
-		
+
 		OSL_CAPABILITIES_OSSTR="$uname_s ${OSL_CAPABILITIES_DIST} ${OSL_CAPABILITIES_REV} (${OSL_CAPABILITIES_PSEUDONAME} $uname_r `uname -m`)"
 	fi
 
@@ -134,11 +134,15 @@ OSL_CAPABILITIES_ensure_has_apt()
 }
 
 
+## returns "Installed" if installed,
+## or whatever status was returned else (for info)
 OSL_CAPABILITIES_APT_get_packet_status()
 {
 	local pkt_name=$1
 	OSL_CAPABILITIES_ensure_has_apt
 
+	## http://ubuntuforums.org/showthread.php?t=924914
+	## this command is the fastest I found, and doesn't require admin rights
 	local raw_status=`dpkg-query -W -f='${Status}' $pkt_name`
 
 	# REM from man apt-query

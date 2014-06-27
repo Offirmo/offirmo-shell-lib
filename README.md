@@ -10,7 +10,7 @@ Available at : https://github.com/Offirmo/offirmo-shell-lib
 Note : The OSL has unit tests for maximum quality.
 
 
-Introduction 
+Introduction
 ============
 
 The user story
@@ -31,7 +31,7 @@ Get a copy of the files and set your path to point to the OSL "bin" dir.
 You can check if it works by typing :
 
  `osl_help.sh`
- 
+
 In your scripts, add this as soon as possible (ideally first instruction in your script for maximum features) :
 
  `source osl_lib_init.sh`
@@ -65,7 +65,7 @@ Special files :
 Experimental / in progress :
 - `osl_lib_interrupt_func.sh`  --> exit hook (for mutex auto release)
 
-  
+
 That's it. You can now use the features.
 
 

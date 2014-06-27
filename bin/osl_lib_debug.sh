@@ -4,7 +4,7 @@
 ## https://github.com/Offirmo/offirmo-shell-lib
 ##
 ## This file defines :
-##   debug functions : traces, 
+##   debug functions : traces,
 ##
 ## This file is meant to be sourced :
 ##    source osl_lib_debug.sh
@@ -27,12 +27,13 @@ OSL_debug()
 	$OSL_debug_activated && echo -en $OSL_ANSI_CODE_RESET
 }
 
+
 # same for a multi-lines buffer
 # (output of a command for example)
 OSL_debug_multi()
 {
 	local buffer="$*"
-	
+
 	# to split lines along \n, we must change the IFS
 	local OIFS="$IFS" # backup Internal Field Separator
 	IFS='

@@ -6,12 +6,13 @@
 ## This file defines :
 ##   - critical utilities / setup that must be set at the very start.
 ##   --> So this file must be sourced as soon as possible !
-## 
+##
 ## This file is meant to be sourced :
 ##    source osl_lib_init.sh
 
 
 ## a critical util
+## @param a dir path to create if missing
 OSL_INIT_ensure_dir()
 {
 	if [[ ! -d "$1" ]]; then
@@ -44,7 +45,7 @@ source()
 	if [[ ! "$1" == "osl_lib_init.sh" ]]; then
 		sourced_script=$1
 	fi
-	
+
 	# source the file, using alternate syntax to avoid loops
 	. $*
 }
@@ -96,7 +97,7 @@ OSL_INIT_restore_default_IFS()
 OSL_INIT_DEFAULT_LOG_DIR=~/logs
 mkdir -p $OSL_INIT_DEFAULT_LOG_DIR
 if [[ -z "$OSL_INIT_LOGFILE" ]]; then
-	
+
 	OSL_INIT_LOGFILE="$OSL_INIT_DEFAULT_LOG_DIR/log.$OSL_INIT_exec_date_for_file.$USER.$OSL_INIT_script_base_name.log"
 	#echo "OSL_INIT_LOGFILE set to $OSL_INIT_LOGFILE"
 fi
@@ -117,7 +118,7 @@ OSL_INIT_engage_tee_redirection_to_logfile()
 	# and thus code above this call will be executed twice.
 	# In the same way, tee redirection CANNOT be engaged from a sourced script.
 	# (added a control to detect that)
-	 
+
 	if [[ -z "$OSL_INIT_TEE_REDIRECTION_ENGAGED" && -z "$OSL_INIT_TEE_REDIRECTION_DISABLED" ]]; then
 		#echo "[debug] OSL tee redirect : 1st call"
 

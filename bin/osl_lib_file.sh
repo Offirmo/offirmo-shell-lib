@@ -26,14 +26,14 @@ OSL_FILE_ensure_line_is_present_in_file()
 		OSL_OUTPUT_display_error_message "file \"$file\" not found !"
 		return 1
 	fi
-	
+
 	# REM : --fixed-strings : Interpret PATTERN as a list of fixed strings, separated by newlines, any of which is to be matched.
 	typeset var test=`grep --count --fixed-strings --line-regexp "$line" "$file"`
 
 	if [[ $test -ne 0 ]]; then
 		# the line is already in the file
 		OSL_debug "  -> Already set."
-		
+
 		do_nothing=1
 	else
 		# the line is not in the file, add it
@@ -52,7 +52,7 @@ OSL_FILE_find_common_path()
 	typeset var path1="$1"
 	typeset var path2="$2"
 	return_value="OSL_FILE_find_common_path ERROR"
-	
+
 	local common_part="$path1" # for now
 
 	while [[ "${path2#$common_part}" == "${path2}" ]]; do
@@ -73,7 +73,7 @@ OSL_FILE_find_relative_path()
 	#echo "source : \"$source\""
 	#echo "target : \"$target\""
 	return_value="OSL_FILE_compute_relative_path ERROR"
-	
+
 	local common_part=$source # for now
 
 	local result=""
@@ -102,12 +102,12 @@ OSL_FILE_find_relative_path()
 		# special case for root (no common path)
 		result="$result/"
 	fi
-	
+
 	# since we now have identified the common part,
 	# compute the non-common part
 	forward_part="${target#$common_part}"
 	#echo "forward_part = \"$forward_part\""
-	
+
 	if [[ -n $result ]] && [[ -n $forward_part ]]; then
 		#echo "(simple concat)"
 		result="$result$forward_part"
@@ -125,7 +125,7 @@ OSL_FILE_find_relative_path()
 }
 
 
-## Absolute path of a file
+## Absolute path of a file from a relative path.
 ## avantage over readlink : works even if we DON'T want symlinks to be followed
 ## thanks http://stackoverflow.com/a/3915986/587407
 OSL_FILE_abspath()
