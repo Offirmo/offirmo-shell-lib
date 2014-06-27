@@ -24,27 +24,27 @@ source osl_lib_mutex.sh
 ## i.e. properly initialized and not currently being modified
 OSL_RSRC_check()
 {
-	local control_dir=$1
-	local rsrc_id=$2
+	local control_dir="$1"
+	local rsrc_id="$2"
 	local return_code=1 # !0 = error by default
 
 	OSL_STAMP_check_rsrc_ok "$control_dir" "$rsrc_id"
 	return_code=$?
-	
+
 	return $return_code
 }
 
 
 OSL_RSRC_cleanup()
 {
-	local control_dir=$1
-	local rsrc_id=$2
+	local control_dir="$1"
+	local rsrc_id="$2"
 	local return_code=1 # !0 = error by default
 
 	OSL_STAMP_delete_rsrc_stamps "$control_dir" "$rsrc_id"
 	OSL_MUTEX_cleanup "$control_dir" "$rsrc_id"
 	return_code=$? # don't really care for this func
-	
+
 	return $?
 }
 
@@ -52,9 +52,9 @@ OSL_RSRC_cleanup()
 ## will forcefully take any lock
 OSL_RSRC_force_begin_managed_write_operation()
 {
-	local control_dir=$1
-	local rsrc_id=$2
-	local caller_info=$3
+	local control_dir="$1"
+	local rsrc_id="$2"
+	local caller_info="$3"
 	local return_code=1 # !0 = error by default
 
 	OSL_MUTEX_force_lock "$control_dir" "$rsrc_id" "$caller_info"
@@ -68,7 +68,7 @@ OSL_RSRC_force_begin_managed_write_operation()
 			OSL_MUTEX_unlock "$control_dir" "$rsrc_id"
 		fi
 	fi
-	
+
 	return $return_code
 }
 
@@ -76,9 +76,9 @@ OSL_RSRC_force_begin_managed_write_operation()
 ## normal, will wait if lock is held
 OSL_RSRC_begin_managed_write_operation()
 {
-	local control_dir=$1
-	local rsrc_id=$2
-	local caller_info=$3
+	local control_dir="$1"
+	local rsrc_id="$2"
+	local caller_info="$3"
 	local return_code=1 # !0 = error by default
 
 	OSL_MUTEX_lock "$control_dir" "$rsrc_id" "$caller_info"
@@ -92,7 +92,7 @@ OSL_RSRC_begin_managed_write_operation()
 			OSL_MUTEX_unlock "$control_dir" "$rsrc_id"
 		fi
 	fi
-	
+
 	return $return_code
 }
 
@@ -100,9 +100,9 @@ OSL_RSRC_begin_managed_write_operation()
 ## will not wait if lock is held
 OSL_RSRC_try_managed_write_operation()
 {
-	local control_dir=$1
-	local rsrc_id=$2
-	local caller_info=$3
+	local control_dir="$1"
+	local rsrc_id="$2"
+	local caller_info="$3"
 	local return_code=1 # !0 = error by default
 
 	OSL_MUTEX_trylock "$control_dir" "$rsrc_id" "$caller_info"
@@ -116,15 +116,15 @@ OSL_RSRC_try_managed_write_operation()
 			OSL_MUTEX_unlock "$control_dir" "$rsrc_id"
 		fi
 	fi
-	
+
 	return $return_code
 }
 
 
 OSL_RSRC_end_managed_write_operation()
 {
-	local control_dir=$1
-	local rsrc_id=$2
+	local control_dir="$1"
+	local rsrc_id="$2"
 	local return_code=1 # !0 = error by default
 
 	## assume we have the lock
@@ -133,15 +133,15 @@ OSL_RSRC_end_managed_write_operation()
 	return_code=$?
 	OSL_MUTEX_unlock "$control_dir" "$rsrc_id"
 	# don't care about mutex for this op
-	
+
 	return $return_code
 }
 
 
 OSL_RSRC_end_managed_write_operation_with_error()
 {
-	local control_dir=$1
-	local rsrc_id=$2
+	local control_dir="$1"
+	local rsrc_id="$2"
 
 	## stamps : do nothing. Sufficient for now to leave the stamps in a bad state
 
@@ -154,28 +154,28 @@ OSL_RSRC_end_managed_write_operation_with_error()
 
 OSL_RSRC_begin_managed_read_operation()
 {
-	local control_dir=$1
-	local rsrc_id=$2
+	local control_dir="$1"
+	local rsrc_id="$2"
 	local return_code=1 # !0 = error by default
 
 	## no mutex
 	OSL_STAMP_begin_managed_read_operation "$control_dir" "$rsrc_id"
 	return_code=$?
 	OSL_RSRC_state=$OSL_STAMP_last_managed_operation_modif_date
-	
+
 	return $return_code
 }
 
 
 OSL_RSRC_end_managed_read_operation()
 {
-	local control_dir=$1
-	local rsrc_id=$2
+	local control_dir="$1"
+	local rsrc_id="$2"
 	local return_code=1 # !0 = error by default
 
 	OSL_STAMP_last_managed_operation_modif_date=$OSL_RSRC_state
 	OSL_STAMP_end_managed_read_operation "$control_dir" "$rsrc_id"
 	return_code=$?
-	
+
 	return $return_code
 }

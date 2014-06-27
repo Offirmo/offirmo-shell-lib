@@ -13,13 +13,13 @@
 ## useful to unpack sources
 OSL_ARCHIVE_unpack_to()
 {
-	local archive_path=$1
-	local destination_dir=$2
-	local expected_unpack_dir=$3 # optional, if natural unpack dir is not = archive name
+	local archive_path="$1"
+	local destination_dir="$2"
+	local expected_unpack_dir="$3" # optional, if natural unpack dir is not = archive name
 	local return_code=1 # error/problem by default
 
 	echo "* unpacking \"$archive_path\" to \"$destination_dir\"..."
-	
+
 	local archive_name=`basename $archive_path`
 	local extension="${archive_name#*.}"
 	local root="${archive_name%%.*}"
@@ -69,6 +69,6 @@ OSL_ARCHIVE_unpack_to()
 		## back to prev dir
 		cd "$prev_wd"
 	fi
-	
+
 	return $return_code
 }

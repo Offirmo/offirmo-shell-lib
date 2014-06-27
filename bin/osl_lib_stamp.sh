@@ -22,7 +22,7 @@ source osl_lib_debug.sh
 ## useuful for some apps
 OSL_STAMP_ensure_stamp()
 {
-	local stamp_file=$1
+	local stamp_file="$1"
 	local oldest_mode=$2
 
 	OSL_INIT_ensure_dir `dirname $stamp_file`
@@ -48,7 +48,7 @@ OSL_STAMP_ensure_stamp()
 # echo "date = $(OSL_STAMP_stamp_date "toto.stamp")
 OSL_STAMP_stamp_date()
 {
-	local stamp_file=$1
+	local stamp_file="$1"
 	stat -c %y "$stamp_file"
 }
 
@@ -89,20 +89,20 @@ OSL_STAMP_MANAGED_RSRC_MODIF_FINISHED_STAMP_SUFFIX=".last_eoo.stamp"
 ## init the stamp pair for a given rsrc
 OSL_STAMP_internal_init_managed_rsrc_stamps()
 {
-	local stamp_dir=$1
+	local stamp_dir="$1"
 	local rsrc_id=$2
 
 	local last_modif_stamp_file=$stamp_dir/$rsrc_id$OSL_STAMP_MANAGED_RSRC_LAST_MODIF_STAMP_SUFFIX
 	local modif_finished_stamp_file=$stamp_dir/$rsrc_id$OSL_STAMP_MANAGED_RSRC_MODIF_FINISHED_STAMP_SUFFIX
 
 	#OSL_debug "[OSL_STAMP] creating \"$stamp_dir/$rsrc_id\" stamps..."
-	
+
 	## if stamps don't exist, they will be created
 	## use old mode to ensure different dates, which is ok because
 	## it means that rsrc is not ready (not initialized)
 	OSL_STAMP_ensure_stamp "$last_modif_stamp_file" to_oldest_possible_date
 	OSL_STAMP_ensure_stamp "$modif_finished_stamp_file"
-	
+
 	return 0
 }
 
@@ -128,7 +128,7 @@ OSL_STAMP_touch_stamps()
 		## stamp file doesn't exist yet
 		touch "$stamp_1"
 	fi
-	
+
 	## problem #2 : it happens that : (seen by experience)
 	## on a RAM fs,
 	##   touch --reference "foo" "bar"
@@ -146,7 +146,7 @@ OSL_STAMP_touch_stamps()
 		## we can now give him an arbitrary date
 		touch --reference "$stamp_1" "$stamp_2"
 	fi
-	
+
 	return $?
 }
 
@@ -169,7 +169,7 @@ OSL_STAMP_check_rsrc_ok()
 	local end_of_modification_date=$(OSL_STAMP_stamp_date "$modif_finished_stamp_file")
 
 	OSL_debug "[OSL_STAMP] comparing stamp dates for rsrc \"$rsrc_id\" : $last_modification_date == $end_of_modification_date ?"
-	
+
 	if [[ "$last_modification_date" == "$end_of_modification_date" ]]; then
 		## it seems that no operation is in progress
 		## at the time of this test
@@ -187,14 +187,14 @@ OSL_STAMP_check_rsrc_ok()
 ## useful in special cases or for cleanups
 OSL_STAMP_delete_rsrc_stamps()
 {
-	local stamp_dir=$1
+	local stamp_dir="$1"
 	local rsrc_id=$2
 
 	local last_modif_stamp_file=$stamp_dir/$rsrc_id$OSL_STAMP_MANAGED_RSRC_LAST_MODIF_STAMP_SUFFIX
 	local modif_finished_stamp_file=$stamp_dir/$rsrc_id$OSL_STAMP_MANAGED_RSRC_MODIF_FINISHED_STAMP_SUFFIX
 
 	rm -f "$last_modif_stamp_file" "$modif_finished_stamp_file"
-	
+
 	return 0
 }
 
@@ -205,7 +205,7 @@ OSL_STAMP_begin_managed_write_operation()
 	## just in case
 	OSL_STAMP_internal_init_managed_rsrc_stamps "$1" "$2"
 
-	local stamp_dir=$1
+	local stamp_dir="$1"
 	local rsrc_id=$2
 
 	local last_modif_stamp_file=$stamp_dir/$rsrc_id$OSL_STAMP_MANAGED_RSRC_LAST_MODIF_STAMP_SUFFIX
@@ -215,13 +215,13 @@ OSL_STAMP_begin_managed_write_operation()
 	## If it's not OK, it could be because a previous operation was interrupted
 	## and this call may be here to fix the rsrc.
 	## So there is no use to check stamp state.
-	
+
 	## force stamp modification
 	OSL_STAMP_touch_stamps "$last_modif_stamp_file"
 
 	## and store the date
 	OSL_STAMP_last_managed_operation_modif_date=$(OSL_STAMP_stamp_date "$last_modif_stamp_file")
-	
+
 	OSL_debug "[OSL_STAMP] beginning managed write of rsrc \"$rsrc_id\" on $OSL_STAMP_last_managed_operation_modif_date..."
 
 	return 0
@@ -231,11 +231,11 @@ OSL_STAMP_begin_managed_write_operation()
 OSL_STAMP_end_managed_write_operation()
 {
 	local return_code=1 # !0 = error by default
-	
+
 	## just in case
 	OSL_STAMP_internal_init_managed_rsrc_stamps "$1" "$2"
 
-	local stamp_dir=$1
+	local stamp_dir="$1"
 	local rsrc_id=$2
 
 	local last_modif_stamp_file=$stamp_dir/$rsrc_id$OSL_STAMP_MANAGED_RSRC_LAST_MODIF_STAMP_SUFFIX
@@ -260,7 +260,7 @@ OSL_STAMP_end_managed_write_operation()
 		OSL_debug "[OSL_STAMP] Warning : concurrent write detected for rsrc \"$rsrc_id\" !"
 		OSL_debug "[OSL_STAMP] expected last modif $expected_last_modif_date, actual : $actual_last_modif_date"
 	fi
-	
+
 	return $return_code
 }
 
@@ -272,7 +272,7 @@ OSL_STAMP_begin_managed_read_operation()
 	## just in case
 	OSL_STAMP_internal_init_managed_rsrc_stamps "$1" "$2"
 
-	local stamp_dir=$1
+	local stamp_dir="$1"
 	local rsrc_id=$2
 
 	local last_modif_stamp_file=$stamp_dir/$rsrc_id$OSL_STAMP_MANAGED_RSRC_LAST_MODIF_STAMP_SUFFIX
@@ -280,7 +280,7 @@ OSL_STAMP_begin_managed_read_operation()
 
 	OSL_STAMP_check_rsrc_ok "$1" "$2"
 	local rsrc_dirty=$?
-	
+
 	if [[ $rsrc_dirty -eq 0 ]]; then
 		## no modif, fine
 		## but no stamp modification (read only)
@@ -290,7 +290,7 @@ OSL_STAMP_begin_managed_read_operation()
 	else
 		OSL_debug "[OSL_STAMP] aborting read of rsrc \"$rsrc_id\" because rsrc is not ready !"
 	fi
-		
+
 	return $return_code
 }
 
@@ -302,7 +302,7 @@ OSL_STAMP_end_managed_read_operation()
 	## just in case
 	OSL_STAMP_internal_init_managed_rsrc_stamps "$1" "$2"
 
-	local stamp_dir=$1
+	local stamp_dir="$1"
 	local rsrc_id=$2
 
 	local last_modif_stamp_file=$stamp_dir/$rsrc_id$OSL_STAMP_MANAGED_RSRC_LAST_MODIF_STAMP_SUFFIX
@@ -325,6 +325,6 @@ OSL_STAMP_end_managed_read_operation()
 		## return code stays NOK
 		OSL_debug "[OSL_STAMP] -> Comparison NOK (inequality), Warning : concurrent chage detected while reading rsrc \"$rsrc_id\" !"
 	fi
-		
+
 	return $return_code
 }

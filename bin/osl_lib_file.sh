@@ -18,7 +18,7 @@ source osl_lib_debug.sh
 OSL_FILE_ensure_line_is_present_in_file()
 {
 	typeset var line="$1"
-	typeset var file="$2"
+	typeset var file="$(OSL_FILE_realpath $2)"
 
 	OSL_debug "* ensuring that line \"$line\" is present in file \"$file\""
 
@@ -68,8 +68,8 @@ OSL_FILE_find_common_path()
 # returns relative path to $2/$target from $1/$source
 OSL_FILE_find_relative_path()
 {
-	local source=$1
-	local target=$2
+	local source="$1"
+	local target="$2"
 	#echo "source : \"$source\""
 	#echo "target : \"$target\""
 	return_value="OSL_FILE_compute_relative_path ERROR"
@@ -130,18 +130,20 @@ OSL_FILE_find_relative_path()
 ## thanks http://stackoverflow.com/a/3915986/587407
 OSL_FILE_abspath()
 {
-	case "$1" in
-	/*)printf "%s\n" "$1";;
-	*)printf "%s\n" "$PWD/$1";;
+	case "$*" in
+	/*)printf "%s\n" "$*";;
+	*)printf "%s\n" "$PWD/$*";;
 	esac;
+}
 
 
-## absolute, expanded path of the given file
+## absolute, expanded path of the given file (even if it doesn't exist)
 ## useful since expanding ~ in bash may be tricky
 ## thanks http://stackoverflow.com/a/11949850/587407
 OSL_FILE_realpath()
 {
 	local path="$*"
 	path="`eval echo ${path//>}`"
+	## REM -m means "ok if doesn't exist"
 	readlink -m "$path"
 }

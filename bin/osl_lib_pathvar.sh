@@ -25,17 +25,17 @@ OSL_PATHVAR_check_if_PLV_contains_this_path()
 	typeset var PLV="$1"
 	typeset var path_to_check="$2"
 	local return_code=1 # !0 = modif in progress by default
-	
+
 	# taken from http://superuser.com/questions/39751/add-directory-to-path-if-its-not-already-there
 	cmd="echo \"\$$PLV\" | tr ':' '\n' | grep -x -c \"$path_to_check\""
 	#echo $cmd
-	
+
 	typeset var count=`eval $cmd`
 	#echo "check_if_PLV_contains_this_path $PLV $path_to_check : $count"
 	if [[ $count -ge 1 ]]; then
 		return_code=0
 	fi
-	
+
 	return $return_code
 }
 
@@ -44,13 +44,13 @@ OSL_PATHVAR_check_if_PLV_contains_this_path()
 OSL_PATHVAR_append_to_PLV_if_not_already_there()
 {
 	typeset var PLV="$1"
-	typeset var path_to_add=$2
-	
+	typeset var path_to_add="$2"
+
 	typeset var PLV_content
 	eval PLV_content=\$$PLV
 	#echo $PLV
 	#echo $PLV_content
-	
+
 	OSL_PATHVAR_check_if_PLV_contains_this_path  "$PLV"  "$path_to_add"
 	if [[ $? -eq 0 ]]; then
 		# given path is already in the PLV
@@ -77,13 +77,13 @@ OSL_PATHVAR_append_to_PLV_if_not_already_there()
 OSL_PATHVAR_prepend_to_PLV_if_not_already_there()
 {
 	typeset var PLV="$1"
-	typeset var path_to_add=$2
-	
+	typeset var path_to_add="$2"
+
 	typeset var PLV_content
 	eval PLV_content=\$$PLV
 	#echo $PLV
 	#echo $PLV_content
-	
+
 	OSL_PATHVAR_check_if_PLV_contains_this_path  "$PLV"  "$path_to_add"
 	if [[ $? -eq 0 ]]; then
 		# given path is already in the PLV
