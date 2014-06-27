@@ -47,3 +47,15 @@ OSL_debug_multi()
 
 	IFS="$OIFS" # restore Internal field separator
 }
+
+
+OSL_print_stack()
+{
+	local skip_count="$*"
+	[[ -z "$skip_count" ]] && skip_count=1
+
+	for i in ${!FUNCNAME[*]}
+	do
+		[[ $i -ge $skip_count ]] && echo -e "   ${OSL_OUTPUT_STYLE_ERROR}at $OSL_ANSI_CODE_SET_BRIGHT${FUNCNAME[$i]}$OSL_ANSI_CODE_SET_DIM() $OSL_ANSI_CODE_SET_FG_YELLOW${BASH_SOURCE[$i]} ${OSL_ANSI_CODE_SET_BRIGHT}l.${BASH_LINENO[$i]} $OSL_OUTPUT_STYLE_DEFAULT"
+	done
+}

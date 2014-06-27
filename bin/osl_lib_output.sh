@@ -75,6 +75,7 @@ OSL_OUTPUT_display_error_message()
 	echo -en $OSL_OUTPUT_STYLE_ERROR
 	echo -e "XXX $*"
 	echo -en $OSL_OUTPUT_STYLE_DEFAULT
+	[[ -n "$OSL_debug_activated" ]] && OSL_print_stack 2
 }
 
 # display a success message in a clearly visible way
@@ -94,4 +95,5 @@ OSL_OUTPUT_display_success_message()
 OSL_OUTPUT_warn_not_implemented()
 {
 	OSL_OUTPUT_warn "$* : Sorry, went through a part not yet implemented."
+	[[ -n "$OSL_debug_activated" ]] && OSL_print_stack 2
 }
