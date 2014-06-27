@@ -8,6 +8,9 @@
 ##
 ## This file is meant to be executed.
 
+## reset path to be sure we test this local OSL instance
+export PATH=../bin:$PATH
+
 source osl_lib_init.sh
 
 # Test the tee redirection on ourself

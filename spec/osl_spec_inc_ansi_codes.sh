@@ -8,6 +8,9 @@
 ##
 ## This file is meant to be executed.
 
+## reset path to be sure we test this local OSL instance
+export PATH=../bin:$PATH
+
 source osl_lib_init.sh
 
 source osl_inc_ansi_codes.sh
@@ -52,6 +55,12 @@ it_should_display_properly_this_color()
 
 it_should_display_properly_this_color "BLACK"
 it_should_display_properly_this_color "RED"
+it_should_display_properly_this_color "GREEN"
+it_should_display_properly_this_color "YELLOW"
+it_should_display_properly_this_color "BLUE"
+it_should_display_properly_this_color "MAGENTA"
+it_should_display_properly_this_color "CYAN"
+it_should_display_properly_this_color "WHITE"
 
 
 OSL_SSPEC_end
