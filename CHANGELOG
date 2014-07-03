@@ -1,0 +1,21 @@
+
+
+
+
+1.2.0 - 2014/07/03
+- feat(CHANGELOG): at last, a CHANGELOG !
+- fix(OSL_EXIT_abort_execution_if_bad_retcode): args are now displayed, except the first (return value)
+- fix(OSL_OUTPUT): some styles were incorrect
+- fix(path handling): more quotes for safety + some `realpath` where needed
+- feat(OSL_FILE_shorten_git_repo_dir): new func
+- feat(OSL_FILE_extract_git_repo_dir): new func
+- feat(OSL_FILE_realpath): new func
+- feat(OSL_FILE_abspath): abspath now uses OSL_FILE_realpath
+- feat(error): error output primitives now display the stacktrace ! (in nice colors)
+- feat(OSL_print_stack): new func
+- feat(code): more comments
+- chore(unit tests): more tests, more readable, no longer test another OSL install
+- chore(OSL_FILE): reoganized code
+
+
+1.1.0 - 2013/01/20
