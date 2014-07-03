@@ -65,7 +65,7 @@ OSL_OUTPUT_display_success_message "This is a success."
 echo
 
 echo "test OSL_OUTPUT_warn_not_implemented :"
-OSL_OUTPUT_warn_not_implemented "custom not implemented message"
+OSL_OUTPUT_warn_not_implemented "(here is a custom not implemented message)"
 echo
 
 
