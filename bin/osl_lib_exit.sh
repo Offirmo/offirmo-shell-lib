@@ -42,6 +42,6 @@ OSL_EXIT_abort_execution_if_bad_retcode()
 {
 	local return_code=$1
 	if [[ $return_code -ne 0 ]]; then
-		OSL_EXIT_abort_execution_with_message "Internal error : a critical op just failed : $*"
+		OSL_EXIT_abort_execution_with_message "Internal error : a critical op just failed : $2 $3 $4 $5 $6 $7 $8 $9"
 	fi
 }
