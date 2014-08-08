@@ -68,7 +68,7 @@ OSL_INTERRUPT_hook_setup()
 		# normal exit : exit code is preserved
 		trap 'OSL_INTERRUPT_hook_EXIT' EXIT
 		OSL_INTERRUPT_ENABLED=true
-		OSL_debug "interrupt hooks are now set"
+		OSL_debug "[OSL_INTERRUPT] interrupt hooks are now set"
 	fi
 }
 
