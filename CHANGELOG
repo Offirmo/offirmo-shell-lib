@@ -1,5 +1,14 @@
 
+Coming soon
+- feat(semver): semver computation and handling
+- feat(color output): better handling of white bg consoles
 
+
+1.2.1 - 2014/08/08
+- fix(file rights): some files loose their unneeded x right
+- fix(capabilities): apt install check no longer spill on standard output
+- fix(archive): more reliable file output detection and better custom output file choice
+- fix(color output): slight output style adjustments
 
 
 1.2.0 - 2014/07/03
