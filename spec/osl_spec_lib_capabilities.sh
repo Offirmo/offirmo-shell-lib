@@ -45,7 +45,7 @@ echo "OSL_CAPABILITIES_is_debian_based() -> $(OSL_CAPABILITIES_is_debian_based)"
 echo "OSL_CAPABILITIES_has_apt()         -> $(OSL_CAPABILITIES_has_apt)"
 echo
 
-test=$(OSL_CAPABILITIES_APT_get_packet_status  bash)
+test=$(OSL_CAPABILITIES_APT_get_packet_status  man)
 OSL_SSPEC_string_should_eq "Installed" "$test"
 
 ## Note : there are various version cleaning cases

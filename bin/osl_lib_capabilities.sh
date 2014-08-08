@@ -143,7 +143,7 @@ OSL_CAPABILITIES_APT_get_packet_status()
 
 	## http://ubuntuforums.org/showthread.php?t=924914
 	## this command is the fastest I found, and doesn't require admin rights
-	local raw_status=`dpkg-query -W -f='${Status}' $pkt_name`
+	local raw_status=`dpkg-query -W -f='${Status}' $pkt_name 2>&1`
 
 	# REM from man apt-query
 	# Package status:
