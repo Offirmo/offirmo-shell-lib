@@ -18,4 +18,3 @@ echo "* current version : $OSL_VERSION ($OSL_STAMP)"
 echo "* install path    : $OSL_INIT_script_full_dir"
 
 echo ""
-

@@ -23,7 +23,7 @@ source osl_lib_output.sh
 OSL_SSPEC_describe()
 {
 	local feature_designation=$1
-	
+
 	echo ""
 	echo "+++ Starting unit test suite... +++"
 	echo "- date : `date`"
@@ -57,7 +57,7 @@ OSL_SSPEC_return_code_should_eq()
 {
 	local expected_return_code=$1
 	local actual_return_code=$2
-	
+
 	if [[ "$expected_return_code" != "$actual_return_code" ]]; then
 		echo -e $OSL_OUTPUT_STYLE_ERROR
  		echo "XXX DON'T PASS XXX ERROR expected return code '$expected_return_code', got '$actual_return_code'"
@@ -76,7 +76,7 @@ OSL_SSPEC_return_code_should_be_OK()
 OSL_SSPEC_return_code_should_be_NOK()
 {
 	local actual_return_code=$1
-	
+
 	if [[ $actual_return_code -eq 0 ]]; then
 		# return = OK, this is not what we expected
 		echo -e $OSL_OUTPUT_STYLE_ERROR
@@ -98,7 +98,7 @@ OSL_SSPEC_string_should_eq()
 {
 	local str_expected=$1
 	local str_got=$2
-	
+
 	if [[ $str_got != $str_expected ]]; then
 		echo -e $OSL_OUTPUT_STYLE_ERROR
 		#debug $str_expected
@@ -115,7 +115,7 @@ OSL_SSPEC_string_should_eq()
 OSL_SSPEC_string_should_not_be_empty()
 {
 	local str=$1
-	
+
 	if [[ -z "$str" ]]; then
 		echo -e $OSL_OUTPUT_STYLE_ERROR
 		echo "XXX DON'T PASS XXX ERROR expected a string to not be empty !"
@@ -130,7 +130,7 @@ OSL_SSPEC_string_should_not_be_empty()
 OSL_SSPEC_string_should_be_empty()
 {
 	local str=$1
-	
+
 	if [[ -z "$str" ]]; then
 		echo -en $OSL_OUTPUT_STYLE_SUCCESS
 		echo ">>> PASS"
@@ -146,7 +146,7 @@ OSL_SSPEC_string_should_be_empty()
 OSL_SSPEC_file_should_exist()
 {
 	local expected_file=$1
-	
+
 	if [[ -f "$expected_file" ]]; then
 		echo -en $OSL_OUTPUT_STYLE_SUCCESS
 		echo ">>> PASS"
@@ -162,7 +162,7 @@ OSL_SSPEC_file_should_exist()
 OSL_SSPEC_should_spec()
 {
 	local msg=$*
-	
+
 	echo -en $OSL_OUTPUT_STYLE_WARNING
 	echo "TODO test : $msg"
 	echo -en $OSL_OUTPUT_STYLE_DEFAULT

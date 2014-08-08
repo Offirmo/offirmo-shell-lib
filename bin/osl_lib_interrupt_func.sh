@@ -12,7 +12,7 @@
 source osl_lib_debug.sh
 
 
-## what exit code should be returned 
+## what exit code should be returned
 OSL_INTERRUPT_default_failure_exit_code=2
 
 
@@ -22,14 +22,14 @@ OSL_INTERRUPT_hook()
 {
 	## if interrupted, return code must be !0
 	local return_code=$OSL_INTERRUPT_default_failure_exit_code
-	
+
 	if [[ $OSL_INTERRUPT_hook_count -gt 0 ]]; then
 		for i in ${OSL_INTERRUPT_hook_index[@]}; do
 			OSL_debug "* calling exit func \"${OSL_INTERRUPT_hook_name[$i]}\"..."
 			${OSL_INTERRUPT_hook_name[$i]}
 		done
 	fi
-	
+
 	return $return_code
 }
 
@@ -89,6 +89,6 @@ OSL_INTERRUPT_add_exit_hook()
 	return_code=0
 
 	OSL_debug "interrupt func \"$exit_hook\" installed."
-	
+
 	return $return_code
 }

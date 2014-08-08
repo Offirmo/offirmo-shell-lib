@@ -74,7 +74,7 @@ OSL_UI_ask_confirmation()
 			;;
 		esac
 	fi
-	
+
 	echo "" # for better clarity
 	return $return_code
 }
@@ -94,9 +94,9 @@ OSL_UI_pause()
 	if [[ -z $message ]]; then
 		message="Pause..."
 	fi
-	
+
 	echo $*
-	
+
 	echo -en $OSL_OUTPUT_STYLE_STRONG
 	read -n1 -s -p "(press a key to continue)" # one char, silent mode (no echo), with given prompt
 	echo -e $OSL_OUTPUT_STYLE_DEFAULT # reset color + new line

@@ -18,7 +18,7 @@ OSL_VERSION_compare()
 	local raw_version_left=$1
 	local raw_version_right=$2
 	local difference_found=false
-	
+
 	IFS='.'
 	## REM : -a = array, splitted along IFS
 	typeset -a version_left=( $raw_version_left )
@@ -33,11 +33,11 @@ OSL_VERSION_compare()
 			break
 		fi
 	done
-	
+
 	if [[ "$difference_found" == false ]]; then
 		echo  '0'
 	fi
-	
+
 	OSL_INIT_restore_default_IFS
 }
 
@@ -55,7 +55,7 @@ OSL_VERSION_test_greater_or_equal()
 		#echo "ge OK"
 		return_value=0
 	fi
-	
+
 	return $return_value
 }
 
@@ -64,7 +64,7 @@ OSL_VERSION_test_smaller_or_equal()
 	local tested_version=$1
 	local reference_version=$2
 	local return_value=1 ## false until found otherwise
-	
+
 	local comp_result=$(OSL_VERSION_compare $tested_version $reference_version)
 	#echo "comparison result : $comp_result"
 	if [[ $comp_result -le 0 ]]; then
@@ -72,7 +72,7 @@ OSL_VERSION_test_smaller_or_equal()
 		#echo "le OK"
 		return_value=0
 	fi
-	
+
 	return $return_value
 }
 
@@ -81,7 +81,7 @@ OSL_VERSION_test_strictly_smaller()
 	local tested_version=$1
 	local reference_version=$2
 	local return_value=1 ## false until found otherwise
-	
+
 	local comp_result=$(OSL_VERSION_compare $tested_version $reference_version)
 	#echo "comparison result : $comp_result"
 	if [[ $comp_result -lt 0 ]]; then
@@ -89,7 +89,6 @@ OSL_VERSION_test_strictly_smaller()
 		#echo "le OK"
 		return_value=0
 	fi
-	
+
 	return $return_value
 }
-

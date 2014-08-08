@@ -124,7 +124,7 @@ OSL_MUTEX_unlock()
 		OSL_OUTPUT_display_error_message "mutex method internal error"
 		;;
 	esac
-	
+
 	return $return_code
 }
 
@@ -148,7 +148,7 @@ OSL_MUTEX_force_lock()
 		OSL_OUTPUT_display_error_message "mutex method internal error"
 		;;
 	esac
-	
+
 	return $return_code
 }
 
@@ -174,7 +174,7 @@ OSL_MUTEX_cleanup()
 		OSL_OUTPUT_display_error_message "mutex method internal error"
 		;;
 	esac
-	
+
 	return $return_code
 }
 
@@ -200,7 +200,7 @@ OSL_MUTEX_lock_with_lockfile_method()
 	local return_code=1 # !0 = error by default
 
 	local lock_file=$lock_dir/$rsrc_id$OSL_MUTEX_SUFFIX
-	
+
 	OSL_debug "attempting blocking lock on $lock_file..."
 
 	## we don't use integrated retry feature to be able to display a message
@@ -226,7 +226,7 @@ OSL_MUTEX_lock_with_lockfile_method()
 	else
 		OSL_debug "  --> mutex acquisition FAILED for $rsrc_id"
 	fi
-		
+
 	#OSL_debug "mutexes currently held : $OSL_MUTEX_unreleased_mutexes"
 
 	return $return_code
@@ -238,7 +238,7 @@ OSL_MUTEX_trylock_with_lockfile_method()
 	local lock_dir=$1
 	local rsrc_id=$2
 	local return_code=1 # !0 = error by default
-	
+
 	local lock_file=$lock_dir/$rsrc_id$OSL_MUTEX_SUFFIX
 
 	OSL_debug "attempting non-blocking lock on $lock_file..."
@@ -277,7 +277,7 @@ OSL_MUTEX_unlock_with_lockfile_method()
 	else
 		OSL_debug "  --> mutex release FAILED for $rsrc_id"
 	fi
-	
+
 	return $return_code
 }
 
@@ -287,25 +287,25 @@ OSL_MUTEX_force_lock_with_lockfile_method()
 	local lock_dir=$1
 	local rsrc_id=$2
 	local return_code=1 # !0 = error by default
-	
+
 	local lock_file=$lock_dir/$rsrc_id$OSL_MUTEX_SUFFIX
-	
+
 	OSL_debug "attempting force lock on $lock_file..."
-	
+
 	## experience : locktimeout of 0 is not allowed
 	rm -f "$lock_file"
 	lockfile -0 -r 0 -l 1 -s 1 "$lock_file" 2>&1 > /dev/null
 	return_code=$?
-	
+
 	if [[ $return_code -eq 0 ]]; then
 		OSL_debug "  --> mutex forced acquisition success for $rsrc_id"
 		#OSL_MUTEX_unreleased_mutexes="$OSL_MUTEX_unreleased_mutexes|$lock_file"
 	else
 		OSL_debug "  --> mutex forced acquisition FAILED for $rsrc_id"
 	fi
-	
+
 	#OSL_debug "mutexes currently held : $OSL_MUTEX_unreleased_mutexes"
-	
+
 	return $return_code
 }
 
@@ -317,12 +317,12 @@ OSL_MUTEX_cleanup_with_lockfile_method()
 	local lock_dir=$1
 	local rsrc_id=$2
 	local return_code=1 # !0 = error by default
-	
+
 	local lock_file=$lock_dir/$rsrc_id$OSL_MUTEX_SUFFIX
-	
+
 	rm -f "$lock_file"
 	return_code=$?
-	
+
 	return $return_code
 }
 
@@ -353,7 +353,7 @@ OSL_MUTEX_lock_with_symlink_method()
 	local return_code=1 # !0 = error by default
 
 	local lock_link=$lock_dir/$rsrc_id$OSL_MUTEX_SUFFIX
-	
+
 	OSL_debug "[MUTEX] attempting blocking lock on $lock_link..."
 
 	## we don't use integrated retry feature to be able to display a message
@@ -379,7 +379,7 @@ OSL_MUTEX_lock_with_symlink_method()
 	else
 		OSL_debug "[MUTEX]   --> mutex acquisition FAILED for $rsrc_id"
 	fi
-		
+
 	#OSL_debug "mutexes currently held : $OSL_MUTEX_unreleased_mutexes"
 
 	return $return_code
@@ -391,7 +391,7 @@ OSL_MUTEX_trylock_with_symlink_method()
 	local lock_dir=$1
 	local rsrc_id=$2
 	local return_code=1 # !0 = error by default
-	
+
 	local lock_link=$lock_dir/$rsrc_id$OSL_MUTEX_SUFFIX
 
 	OSL_debug "[MUTEX] attempting non-blocking lock on $lock_link..."
@@ -434,7 +434,7 @@ OSL_MUTEX_unlock_with_symlink_method()
 	else
 		OSL_debug "[MUTEX]   --> mutex release FAILED for $rsrc_id"
 	fi
-	
+
 	return $return_code
 }
 
@@ -444,25 +444,25 @@ OSL_MUTEX_force_lock_with_symlink_method()
 	local lock_dir=$1
 	local rsrc_id=$2
 	local return_code=1 # !0 = error by default
-	
+
 	local lock_link=$lock_dir/$rsrc_id$OSL_MUTEX_SUFFIX
-	
+
 	OSL_debug "[MUTEX] attempting force lock on $lock_link..."
-	
+
 	[ -e "$lock_link" ] && mv "$lock_link" "$lock_link.deleteme"
 	rm -f "$lock_link.deleteme"
 	ln -s "$lock_dir" "$lock_link"
 	return_code=$?
-	
+
 	if [[ $return_code -eq 0 ]]; then
 		OSL_debug "[MUTEX]   --> mutex forced acquisition success for $rsrc_id"
 		#OSL_MUTEX_unreleased_mutexes="$OSL_MUTEX_unreleased_mutexes|$lock_link"
 	else
 		OSL_debug "[MUTEX]   --> mutex forced acquisition FAILED for $rsrc_id"
 	fi
-	
+
 	#OSL_debug "mutexes currently held : $OSL_MUTEX_unreleased_mutexes"
-	
+
 	return $return_code
 }
 
@@ -474,12 +474,12 @@ OSL_MUTEX_cleanup_with_symlink_method()
 	local lock_dir=$1
 	local rsrc_id=$2
 	local return_code=1 # !0 = error by default
-	
+
 	local lock_link=$lock_dir/$rsrc_id$OSL_MUTEX_SUFFIX
-	
+
 	[ -e "$lock_link" ] && mv "$lock_link" "$lock_link.deleteme"
 	rm -f "$lock_link.deleteme"
 	return_code=$?
-	
+
 	return $return_code
 }
