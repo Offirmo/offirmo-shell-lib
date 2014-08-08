@@ -4,7 +4,7 @@
 ## https://github.com/Offirmo/offirmo-shell-lib
 ##
 ## This file defines :
-##   - unit test of color codes
+##   - unit test of output functions
 ##
 ## This file is meant to be executed.
 

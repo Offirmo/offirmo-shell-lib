@@ -39,14 +39,20 @@ OSL_debug_multi()
 	IFS='
 ' # this makes IFS a newline
 
-	echo -en $OSL_OUTPUT_STYLE_DEBUG
 	for line in $buffer; do
 		OSL_debug $line
 	done
-	echo -en $OSL_ANSI_CODE_RESET
 
 	IFS="$OIFS" # restore Internal field separator
 }
+
+##########################################
+## styles for functions in this lib
+## We use error style as base, of course
+OSL_OUTPUT_STYLE_STACK=${OSL_ANSI_CODE_SET_FG_RED}
+OSL_OUTPUT_STYLE_FUNC=${OSL_OUTPUT_STYLE_STACK}${OSL_ANSI_CODE_SET_BRIGHT}
+OSL_OUTPUT_STYLE_FILENAME=${OSL_OUTPUT_STYLE_STACK}${OSL_ANSI_CODE_SET_DIM}${OSL_ANSI_CODE_SET_FG_YELLOW}
+OSL_OUTPUT_STYLE_LINENO=${OSL_OUTPUT_STYLE_STACK}${OSL_ANSI_CODE_SET_FG_MAGENTA}
 
 
 OSL_print_stack()
@@ -56,6 +62,6 @@ OSL_print_stack()
 
 	for i in ${!FUNCNAME[*]}
 	do
-		[[ $i -ge $skip_count ]] && echo -e "   ${OSL_OUTPUT_STYLE_ERROR}at $OSL_ANSI_CODE_SET_BRIGHT${FUNCNAME[$i]}$OSL_ANSI_CODE_SET_DIM() $OSL_ANSI_CODE_SET_FG_YELLOW${BASH_SOURCE[$i]} ${OSL_ANSI_CODE_SET_BRIGHT}l.${BASH_LINENO[$i]} $OSL_OUTPUT_STYLE_DEFAULT"
+		[[ $i -ge $skip_count ]] && echo -e "   ${OSL_OUTPUT_STYLE_STACK}at $OSL_OUTPUT_STYLE_FUNC${FUNCNAME[$i]}$OSL_ANSI_CODE_SET_DIM() $OSL_OUTPUT_STYLE_FILENAME${BASH_SOURCE[$i]} ${OSL_OUTPUT_STYLE_LINENO}l.${BASH_LINENO[$i]} $OSL_OUTPUT_STYLE_DEFAULT"
 	done
 }

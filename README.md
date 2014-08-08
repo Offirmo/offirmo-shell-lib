@@ -65,6 +65,8 @@ Special files :
 Experimental / in progress :
 - `osl_lib_interrupt_func.sh`  --> exit hook (for mutex auto release)
 
+Env variables : OSL will respond to a few environment variables :
+* OSL_console_has_light_scheme=true (default false) will adjust colored output styles to be more readable on a white background
 
 That's it. You can now use the features.
 

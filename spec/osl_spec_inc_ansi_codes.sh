@@ -44,6 +44,17 @@ it_should_display_properly_this_background_color()
 	eval $test_cmd
 }
 
+it_should_display_properly_this_color_with_modifiers()
+{
+	# params
+	local color_radix=$1
+	local color_code="OSL_ANSI_CODE_SET_FG_${color_radix}"
+
+	local test_cmd="echo -e \"-\$$color_code $color_radix ${OSL_ANSI_CODE_SET_BRIGHT}Bright ${OSL_ANSI_CODE_SET_DIM}Dim ${OSL_ANSI_CODE_SET_UNDERLINE}Underline
+	\$OSL_ANSI_CODE_RESET\""
+	eval $test_cmd
+}
+
 it_should_display_properly_this_color()
 {
 	# params
@@ -51,6 +62,7 @@ it_should_display_properly_this_color()
 
 	it_should_display_properly_this_foreground_color $color_radix
 	it_should_display_properly_this_background_color $color_radix
+	it_should_display_properly_this_color_with_modifiers $color_radix
 }
 
 it_should_display_properly_this_color "BLACK"
