@@ -3,6 +3,8 @@ Coming soon
 - feat(semver): semver computation and handling
 - feat(color output): better handling of white bg consoles
 
+1.2.2 - 2014/08/08
+- fix(version): sorry, forgotten to bump version in file
 
 1.2.1 - 2014/08/08
 - fix(file rights): some files loose their unneeded x right
