@@ -60,8 +60,8 @@ OSL_print_stack()
 	local skip_count="$*"
 	[[ -z "$skip_count" ]] && skip_count=1
 
-	for i in ${!FUNCNAME[*]}
+	for i in ${!FUNCNAME[@]}
 	do
-		[[ $i -ge $skip_count ]] && echo -e "   ${OSL_OUTPUT_STYLE_STACK}at $OSL_OUTPUT_STYLE_FUNC${FUNCNAME[$i]}$OSL_ANSI_CODE_SET_DIM() $OSL_OUTPUT_STYLE_FILENAME${BASH_SOURCE[$i]} ${OSL_OUTPUT_STYLE_LINENO}l.${BASH_LINENO[$i]} $OSL_OUTPUT_STYLE_DEFAULT"
+		[[ $i -ge $skip_count ]] && echo -e "   ${OSL_OUTPUT_STYLE_STACK}at $OSL_OUTPUT_STYLE_FUNC${FUNCNAME[$i]}$OSL_ANSI_CODE_SET_DIM() $OSL_OUTPUT_STYLE_FILENAME${BASH_SOURCE[$i]} ${OSL_OUTPUT_STYLE_LINENO}l.${BASH_LINENO[$i-1]} $OSL_OUTPUT_STYLE_DEFAULT"
 	done
 }

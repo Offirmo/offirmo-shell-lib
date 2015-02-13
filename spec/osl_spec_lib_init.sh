@@ -13,8 +13,8 @@ export PATH=../bin:$PATH
 
 source osl_lib_init.sh
 
-# Test the tee redirection on ourself
-OSL_INIT_engage_tee_redirection_to_logfile
+## Test the tee redirection on ourself
+#OSL_INIT_engage_tee_redirection_to_logfile
 
 source osl_lib_sspec.sh
 
@@ -42,8 +42,8 @@ echo "- checking log..."
 OSL_SSPEC_string_should_not_be_empty "$OSL_INIT_LOGFILE"
 OSL_SSPEC_string_should_eq "$OSL_INIT_DEFAULT_LOG_DIR/log.$OSL_INIT_exec_date_for_file.$USER.$OSL_INIT_script_base_name.log" $OSL_INIT_LOGFILE
 
-echo "- tee redirection..."
-OSL_SSPEC_file_should_exist "$OSL_INIT_LOGFILE"
+#echo "- tee redirection..."
+#OSL_SSPEC_file_should_exist "$OSL_INIT_LOGFILE"
 
 
 OSL_SSPEC_end

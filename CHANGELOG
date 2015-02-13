@@ -3,6 +3,11 @@ Coming soon
 - feat(semver): semver computation and handling
 - feat(color output): better handling of white bg consoles
 
+2.0.0 - 2015/02/12
+- fix the stack display function : function / files were misaligned
+- BAD FEATURE REMOVED : source was incorrectly redefined to uselessly store the current script name. Completely removed.
+- BAD FEATURE REMOVED : the auto redirect to tee is buggy as is and is to be reimplemented. (source left waiting for reimplementation but not working)
+
 1.2.2 - 2014/08/08
 - fix(version): sorry, forgotten to bump version in file
 

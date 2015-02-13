@@ -37,7 +37,7 @@ OSL_EXIT_abort_execution_because_not_implemented()
 
 
 # stop execution if given return code is not 0
-# params : all params will be displayed
+# params : all params will be displayed except the first one
 OSL_EXIT_abort_execution_if_bad_retcode()
 {
 	local return_code=$1

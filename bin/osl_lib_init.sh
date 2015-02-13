@@ -34,25 +34,7 @@ OSL_INIT_ensure_dir()
 source osl_inc_env.sh
 
 
-## Redefine the "source" shell command.
-# This is a hack to portabily be able to know the currently sourced script
-## hat tip : http://dbaspot.com/shell/391701-how-get-script-name-when-sourcing.html
-## Of course, only works after this special lib file has been sourced once.
-source()
-{
-	# we skip this file itself
-	# because in other funcs in this file we may want to know the last parent sourced file
-	if [[ ! "$1" == "osl_lib_init.sh" ]]; then
-		sourced_script=$1
-	fi
-
-	# source the file, using alternate syntax to avoid loops
-	. $*
-}
-
-
-### useful dynamic vars
-
+### useful dynamic vars :
 
 # formated script invocation date
 if [[ -z "$OSL_INIT_exec_date_for_human" ]]; then
@@ -62,7 +44,6 @@ if [[ -z "$OSL_INIT_exec_date_for_human" ]]; then
 	OSL_INIT_exec_day_date_for_file=`date +%Y%m%d`
 	OSL_INIT_exec_date_for_file="$OSL_INIT_exec_day_date_for_file-`date +%Hh%Mm%S`"
 fi
-
 
 ## It's often useful to have the script base name and full path.
 ## But this is tricky because previous commands may change current dir
@@ -82,7 +63,6 @@ if [[ -z $OSL_INIT_script_full_path && "$0" != "-bash" ]]; then
 	OSL_INIT_script_preferred_invocation_name=$OSL_INIT_script_base_name
 fi
 
-
 # backup of the "Internal Field Separator"
 # Very useful because we often need to change it.
 if [[ -z "$OSL_INIT_ORIGINAL_IFS" ]]; then
@@ -92,7 +72,6 @@ OSL_INIT_restore_default_IFS()
 {
 	IFS=$OSL_INIT_ORIGINAL_IFS
 }
-
 
 OSL_INIT_DEFAULT_LOG_DIR=~/logs
 mkdir -p $OSL_INIT_DEFAULT_LOG_DIR
@@ -106,7 +85,8 @@ fi
 ## For some scripts, we want systematic logging to a file,
 ## while keeping output for users.
 ## Will use tee and a recursion for that.
-OSL_INIT_engage_tee_redirection_to_logfile()
+## COMMENTED (XXX) : to be reimplemented soon
+XXX_OSL_INIT_engage_tee_redirection_to_logfile()
 {
 	# XXX WARNING XXX
 	# THIS CODE MUST BE TESTED CAREFULLY
@@ -123,6 +103,7 @@ OSL_INIT_engage_tee_redirection_to_logfile()
 		#echo "[debug] OSL tee redirect : 1st call"
 
 		local redirected_script="$0" # by default, we call ourself again
+		## XXX TOREVIEW OSL_INIT_sourced_script is not defined
 		if [[ -n "$OSL_INIT_sourced_script" ]]; then
 			# unless we are in a sourced script,
 			# we can NOT activate tee redirection
